@@ -934,15 +934,22 @@ function bindView(){
     const k=route==='ai'?'ai':route==='fitness'?'fit':'fin';
     const L=lessonFor(k);
     opts.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      if(opts.dataset.done==='1')return;
       const i=+b.dataset.o;
       opts.querySelectorAll('.opt').forEach(x=>x.classList.remove('ok','no'));
       if(i===L.q.a){
-        b.classList.add('ok');$('#hint').innerHTML='<span class="res-ok">答对了 ✓</span> 「'+L.sum+'」';
-        const d=D();if(k==='ai'){d.aiDone=true;d.aiOk=(d.aiOk||0)+1;}else if(k==='fit'){d.fitDone=true;d.fitOk=(d.fitOk||0)+1;}else{d.finDone=true;d.finOk=(d.finOk||0)+1;}
-        save();toast('本节已完成，计入打卡');render();
+        opts.dataset.done='1';
+        b.classList.add('ok');
+        $('#hint').innerHTML='<span class="res-ok">答对了 ✓</span> 「'+L.sum+'」';
+        const d=D();
+        if(k==='ai'){d.aiDone=true;d.aiOk=(d.aiOk||0)+1;}
+        else if(k==='fit'){d.fitDone=true;d.fitOk=(d.fitOk||0)+1;}
+        else{d.finDone=true;d.finOk=(d.finOk||0)+1;}
+        save();toast('本节已完成，计入打卡');
       }else{
-        b.classList.add('no');opts.querySelectorAll('.opt')[L.q.a].classList.add('ok');
-        $('#hint').innerHTML='<span class="res-bad">再想想</span> 正确答案是 '+String.fromCharCode(65+L.q.a);
+        b.classList.add('no');
+        opts.querySelectorAll('.opt')[L.q.a].classList.add('ok');
+        $('#hint').innerHTML='<span class="res-bad">再想想</span> 正确答案是 '+String.fromCharCode(65+L.q.a)+'，点一下正确选项即可完成';
       }
     });
   }
