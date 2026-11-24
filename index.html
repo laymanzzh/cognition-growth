@@ -100,6 +100,9 @@ nav button.on i{filter:none;transform:translateY(-1px)}
 input[type=text]{width:100%;padding:14px;border-radius:14px;border:1.5px solid var(--line);
   background:var(--card);font-family:inherit;font-size:16px;color:var(--ink);outline:none}
 input[type=text]:focus{border-color:var(--pri)}
+select{width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--line);
+  background:var(--card);font-family:inherit;font-size:13px;color:var(--ink);outline:none;appearance:none}
+select:focus{border-color:var(--pri)}
 .opt{display:block;width:100%;text-align:left;padding:13px 14px;border-radius:14px;border:1.5px solid var(--line);
   background:var(--card);font-family:inherit;font-size:13.5px;color:var(--ink);margin-bottom:9px;cursor:pointer;line-height:1.5}
 .opt.ok{border-color:var(--ok);background:rgba(18,183,106,.09)}
@@ -197,21 +200,44 @@ function streak(){
 }
 
 /* ============ 音频 / 语音 ============ */
-let voice=null;
+let voice=null, VOICES=[];
+/* 声音打分：自然语音 > 常见内置语音，机械音排后面 */
+function scoreVoice(v){
+  const n=(v.name||'').toLowerCase();
+  let s=0;
+  if(/natural|neural|online/.test(n))s+=40;
+  if(/aria|emma|ava|jenny|guy|andrew|brian|samantha|karen|daniel|moira|tessa/.test(n))s+=25;
+  if(/google us english|google uk english/.test(n))s+=22;
+  if(/siri/.test(n))s+=18;
+  if(/zira|david|mark/.test(n))s+=6;
+  if(/compact|espeak|robot/.test(n))s-=20;
+  if(/^en-us/i.test(v.lang))s+=6; else if(/^en-gb/i.test(v.lang))s+=4;
+  if(v.localService===false)s+=8;   // 云端语音通常更自然
+  return s;
+}
 function pickVoice(){
-  const vs=speechSynthesis.getVoices()||[];
-  voice = vs.find(v=>/en-US/.test(v.lang)&&/Female|Samantha|Zira|Google US/i.test(v.name)) ||
-          vs.find(v=>/en-US/.test(v.lang)) || vs.find(v=>/en-GB/.test(v.lang)) ||
-          vs.find(v=>/^en/.test(v.lang)) || null;
+  VOICES=(speechSynthesis.getVoices()||[]).filter(v=>/^en([-_]|$)/i.test(v.lang));
+  VOICES.sort((a,b)=>scoreVoice(b)-scoreVoice(a));
+  const saved=S.voiceName?VOICES.find(v=>v.name===S.voiceName):null;
+  voice=saved||VOICES[0]||null;
 }
 if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
 function speak(text,rate){
   if(!('speechSynthesis' in window)){toast('当前浏览器不支持发音');return;}
   try{speechSynthesis.cancel();}catch(e){}
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='en-US';u.rate=rate||0.85;u.pitch=1;
-  if(voice)u.voice=voice;
-  speechSynthesis.speak(u);
+  const r=rate||S.rate||0.9;
+  const src=String(text||'').trim();
+  if(!src)return;
+  // 长句按标点分段排队朗读，句子之间自然停顿，比整段一口气读清晰
+  let parts=src.split(/(?<=[.!?;:])\s+/).filter(Boolean);
+  if(parts.length<2)parts=[src];
+  parts.forEach((p,i)=>{
+    const u=new SpeechSynthesisUtterance(p);
+    u.lang=/^en-gb/i.test((voice&&voice.lang)||'')?'en-GB':'en-US';
+    u.rate=r;u.pitch=1;u.volume=1;
+    if(voice)u.voice=voice;
+    speechSynthesis.speak(u);
+  });
 }
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec=null;
@@ -718,6 +744,22 @@ function viewMe(){
     ${wrongN?Object.keys(S.wrong).slice(0,20).map(k=>`<div class="wrow" style="cursor:default"><div style="flex:1"><div class="wword" style="font-size:15px">${S.wrong[k]}</div><div class="tiny muted">你写成了：${k}</div></div><button class="snd" data-say="${S.wrong[k]}">🔊</button></div>`).join(''):'<div class="tiny muted">还没有错词，默写时拼错的词会自动收集到这里。</div>'}
   </div>
 
+  <h2 class="sec">发音设置</h2>
+  <div class="card">
+    <div class="row" style="margin-bottom:10px">
+      <div class="bold sm">朗读声音</div><div class="spacer"></div>
+      <span class="tiny muted">${VOICES.length?VOICES.length+' 个英文声音':'未检测到英文声音'}</span>
+    </div>
+    <select id="voiceSel">
+      ${VOICES.length?VOICES.map(v=>`<option value="${(v.name||'').replace(/"/g,'')}" ${voice&&voice.name===v.name?'selected':''}>${v.name} · ${v.lang}</option>`).join(''):'<option>系统暂无英文语音</option>'}
+    </select>
+    <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap">
+      ${[[0.65,'很慢'],[0.85,'慢'],[0.95,'标准'],[1.1,'快']].map(([r,t])=>`<button class="btn ${Math.abs((S.rate||0.9)-r)<0.02?'btn-soft':'btn-ghost'} btn-sm" data-rate="${r}">${t}</button>`).join('')}
+      <button class="btn btn-soft btn-sm" id="tryVoice" style="margin-left:auto">试听</button>
+    </div>
+    <div class="tiny muted" style="margin-top:10px;line-height:1.65">声音偏机械时：Windows 打开「设置 → 时间和语言 → 语音」，安装「英语（美国）」的自然语音包；安卓在系统「文字转语音」里下载高质量英文语音。装完回到这里，会多出 Aria / Emma 这类更自然的声音。</div>
+  </div>
+
   <h2 class="sec">设置</h2>
   <div class="card" style="padding:4px 16px">
     <div class="wrow" style="cursor:default" id="nickRow"><div style="flex:1"><div class="sm" style="font-weight:600">修改昵称</div></div><div class="tiny muted">${S.nick} ›</div></div>
@@ -805,8 +847,8 @@ function bindView(){
     const isS=enGroup==='sent';
     const list=isS?todayWords().sent:(enGroup==='daily'?todayWords().daily:todayWords().ai);
     $('#backList').onclick=()=>{enMode='list';render();};
-    $('#playN').onclick=()=>speak(list[flashIdx][0],isS?0.9:0.85);
-    $('#playS').onclick=()=>speak(list[flashIdx][0],0.55);
+    $('#playN').onclick=()=>speak(list[flashIdx][0],S.rate||0.9);
+    $('#playS').onclick=()=>speak(list[flashIdx][0],0.6);
     $('#prevW').onclick=()=>{flashIdx=Math.max(0,flashIdx-1);render();};
     $('#nextW').onclick=()=>{flashIdx=Math.min(list.length-1,flashIdx+1);render();};
     const mic=$('#micBtn'), hint=$('#hint');
@@ -907,6 +949,11 @@ function bindView(){
 
   // 我的
   if(route==='me'){
+    const sel=$('#voiceSel');
+    if(sel)sel.onchange=()=>{S.voiceName=sel.value;save();pickVoice();toast('已切换声音');};
+    const tv=$('#tryVoice');
+    if(tv)tv.onclick=()=>speak('Hello. This is a sample sentence. Do you like this voice?');
+    $('#view').querySelectorAll('[data-rate]').forEach(n=>n.onclick=()=>{S.rate=parseFloat(n.dataset.rate);save();render();toast('语速已调整');});
     const nr=$('#nightRow');if(nr)nr.onclick=()=>{S.night=!S.night;save();body_night();render();};
     const nk=$('#nickRow');if(nk)nk.onclick=()=>{const v=prompt('输入你的昵称',S.nick);if(v&&v.trim()){S.nick=v.trim().slice(0,10);save();render();}};
     const rr=$('#resetRow');if(rr)rr.onclick=()=>{if(confirm('确认清空所有学习数据？此操作不可恢复')){localStorage.removeItem(KEY);S=load();body_night();render();toast('已重置');}};
