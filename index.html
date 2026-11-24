@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#5b6cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>认知成长 · 每日学习</title>
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#f3f5fa; --card:#ffffff; --ink:#151824; --ink2:#5d6480; --line:#e8ebf3;
+  --pri:#5b6cff; --pri2:#8b5cf6; --ok:#12b76a; --warn:#f79009; --bad:#f04438;
+  --en:#5b6cff; --ai:#8b5cf6; --fit:#12b76a; --fin:#f79009;
+  --sh:0 6px 20px rgba(28,38,80,.07);
+}
+body.night{
+  --bg:#0d0f16; --card:#171a24; --ink:#eceffa; --ink2:#8f97ad; --line:#262b38;
+  --sh:0 6px 20px rgba(0,0,0,.35);
+}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased; transition:background .25s,color .25s;
+}
+#app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;display:flex;flex-direction:column;
+  background:var(--bg);box-shadow:0 0 40px rgba(0,0,0,.06)}
+.bar{padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  position:sticky;top:0;z-index:20;background:var(--bg)}
+.bar .ttl{font-size:17px;font-weight:700;letter-spacing:.3px}
+.bar .sub{font-size:11px;color:var(--ink2);margin-top:2px}
+.icon-btn{width:34px;height:34px;border-radius:12px;background:var(--card);box-shadow:var(--sh);
+  display:flex;align-items:center;justify-content:center;font-size:16px;border:none;color:var(--ink);cursor:pointer}
+main{flex:1;padding:0 16px 96px;overflow-x:hidden}
+.card{background:var(--card);border-radius:18px;padding:16px;box-shadow:var(--sh);margin-bottom:14px;
+  border:1px solid transparent}
+.card.tap{cursor:pointer;transition:transform .12s}
+.card.tap:active{transform:scale(.985)}
+h2.sec{font-size:13px;color:var(--ink2);font-weight:600;margin:18px 4px 10px;letter-spacing:.5px}
+.row{display:flex;align-items:center;gap:12px}
+.spacer{flex:1}
+.muted{color:var(--ink2)}
+.tiny{font-size:11px}
+.sm{font-size:12.5px}
+.bold{font-weight:700}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600}
+.pri{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff}
+.btn{border:none;border-radius:14px;padding:13px 16px;font-size:14px;font-weight:700;cursor:pointer;
+  font-family:inherit;transition:transform .1s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:active{transform:scale(.97)}
+.btn-main{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;width:100%}
+.btn-ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn-soft{background:rgba(91,108,255,.1);color:var(--pri)}
+.btn-sm{padding:8px 12px;font-size:12.5px;border-radius:11px}
+.prog{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.prog > i{display:block;height:100%;border-radius:99px;transition:width .3s}
+.ring{width:74px;height:74px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;background:conic-gradient(var(--pri) calc(var(--p)*1%),var(--line) 0)}
+.ring::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--card)}
+.ring span{position:relative;z-index:2;font-size:19px;font-weight:800;color:var(--ink)}
+.ring small{position:absolute;z-index:2;bottom:15px;font-size:9px;color:var(--ink2)}
+/* tabs */
+nav{position:sticky;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);
+  padding:6px 2px calc(6px + env(safe-area-inset-bottom));z-index:30;
+  box-shadow:0 -6px 20px rgba(20,30,70,.06)}
+nav button{flex:1;border:none;background:none;font-family:inherit;color:var(--ink2);font-size:9.5px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;cursor:pointer;border-radius:12px}
+nav button i{font-style:normal;font-size:19px;line-height:1;filter:grayscale(.35);transition:.2s}
+nav button.on{color:var(--pri);font-weight:700}
+nav button.on i{filter:none;transform:translateY(-1px)}
+/* word card */
+.wrow{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.wrow:last-child{border-bottom:none}
+.wword{font-size:16.5px;font-weight:700;letter-spacing:.2px}
+.wipa{font-size:11px;color:var(--ink2);margin-top:1px;font-family:"Segoe UI",Arial,sans-serif}
+.wcn{font-size:12.5px;color:var(--ink2);margin-top:3px}
+.chk{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent}
+.chk.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.snd{width:30px;height:30px;border-radius:50%;background:rgba(91,108,255,.1);color:var(--pri);
+  display:flex;align-items:center;justify-content:center;font-size:14px;border:none;flex-shrink:0}
+/* flash card */
+.flash{background:linear-gradient(150deg,var(--pri),var(--pri2));border-radius:24px;color:#fff;
+  padding:26px 20px;text-align:center;box-shadow:0 14px 34px rgba(91,108,255,.32);margin-bottom:16px}
+.flash .w{font-size:38px;font-weight:800;letter-spacing:.5px;line-height:1.15;word-break:break-word}
+.flash .ipa{opacity:.85;font-size:13px;margin-top:6px}
+.flash .cn{font-size:18px;margin-top:14px;font-weight:600;letter-spacing:1px}
+.flash .ex{font-size:12.5px;opacity:.8;margin-top:10px;line-height:1.6}
+.mic{width:76px;height:76px;border-radius:50%;border:none;background:var(--card);color:var(--pri);
+  font-size:30px;box-shadow:0 8px 24px rgba(20,30,70,.16);cursor:pointer;margin:6px auto 0;display:flex;
+  align-items:center;justify-content:center;transition:.2s}
+.mic.rec{background:var(--bad);color:#fff;transform:scale(1.06);animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(240,68,56,.5)}100%{box-shadow:0 0 0 18px rgba(240,68,56,0)}}
+.hint{text-align:center;font-size:12.5px;color:var(--ink2);margin-top:10px;min-height:20px}
+.res-ok{color:var(--ok);font-weight:700}
+.res-bad{color:var(--bad);font-weight:700}
+/* quiz / input */
+input[type=text]{width:100%;padding:14px;border-radius:14px;border:1.5px solid var(--line);
+  background:var(--card);font-family:inherit;font-size:16px;color:var(--ink);outline:none}
+input[type=text]:focus{border-color:var(--pri)}
+.opt{display:block;width:100%;text-align:left;padding:13px 14px;border-radius:14px;border:1.5px solid var(--line);
+  background:var(--card);font-family:inherit;font-size:13.5px;color:var(--ink);margin-bottom:9px;cursor:pointer;line-height:1.5}
+.opt.ok{border-color:var(--ok);background:rgba(18,183,106,.09)}
+.opt.no{border-color:var(--bad);background:rgba(240,68,56,.08)}
+/* heat */
+.heat{display:grid;grid-template-columns:repeat(14,1fr);gap:5px}
+.heat div{aspect-ratio:1;border-radius:5px;background:var(--line)}
+.heat div.v1{background:rgba(91,108,255,.35)}
+.heat div.v2{background:rgba(91,108,255,.62)}
+.heat div.v3{background:var(--pri)}
+/* misc */
+.mods{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;margin:0 -16px;padding-left:16px;padding-right:16px}
+.mods::-webkit-scrollbar{display:none}
+.toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);background:rgba(20,24,36,.92);
+  color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:.28s;z-index:99}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.lv{font-size:10.5px;padding:3px 8px;border-radius:8px;background:rgba(139,92,246,.14);color:var(--pri2);font-weight:700}
+.li{display:flex;gap:9px;font-size:13.5px;line-height:1.75;margin:9px 0;color:var(--ink)}
+.li b{color:var(--pri);flex-shrink:0}
+.acc{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:9px;cursor:pointer;background:var(--card)}
+.acc .h{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.acc .body{display:none;margin-top:10px;font-size:13px;line-height:1.8;color:var(--ink2)}
+.acc.open .body{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--card);border-radius:16px;padding:14px;box-shadow:var(--sh);text-align:center}
+.stat b{display:block;font-size:24px;font-weight:800;letter-spacing:-.5px}
+.stat span{font-size:11px;color:var(--ink2)}
+.hero{background:linear-gradient(135deg,#4a5cf5,#8b5cf6 60%,#a855f7);border-radius:22px;padding:18px;
+  color:#fff;box-shadow:0 14px 34px rgba(91,108,255,.3);margin-bottom:14px}
+.hero .t{font-size:12px;opacity:.82;letter-spacing:1px}
+.hero .n{font-size:22px;font-weight:800;margin-top:6px;line-height:1.3}
+.chip{display:inline-flex;padding:7px 14px;border-radius:99px;font-size:12.5px;font-weight:600;
+  background:var(--card);color:var(--ink2);border:1.5px solid var(--line);margin:0 8px 8px 0;cursor:pointer}
+.chip.on{background:var(--ink);color:var(--card);border-color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="bar" id="topbar"></header>
+  <main id="view"></main>
+  <nav id="tabs"></nav>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ 数据区（可分模块编辑） ============ */
+const DAILY_WORDS = [];   /* 每日 20 个日常单词，10 组 */
+const AI_WORDS    = [];   /* 每日 10 个 AI 单词，10 组 */
+const AI_LESSONS  = [];   /* AI 课程池 */
+const FIT_LESSONS = [];   /* 健身课程池 */
+const FIN_LESSONS = [];   /* 金融课程池 */
+
+/* ============ 基础工具 ============ */
+const $ = (s,r=document)=>r.querySelector(s);
+const el = (html)=>{const d=document.createElement('div');d.innerHTML=html.trim();return d.firstElementChild;};
+const pad = n=>String(n).padStart(2,'0');
+const iso = d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const KEY = 'cog_growth_v1';
+const today = ()=>iso(new Date());
+function dateAdd(str,n){const d=new Date(str+'T00:00:00');d.setDate(d.getDate()+n);return iso(d);}
+function diffDays(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/864e5);}
+function toast(t){const n=$('#toast');n.textContent=t;n.classList.add('show');clearTimeout(n._t);n._t=setTimeout(()=>n.classList.remove('show'),1600);}
+
+let S = load();
+function load(){
+  let s=null;
+  try{s=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+  if(!s||!s.start){s={start:today(),nick:'学习者',daily:{},seen:{},wrong:{},night:false,goals:{en:true,ai:true,fit:true,fin:true}};}
+  s.daily=s.daily||{};s.seen=s.seen||{};s.wrong=s.wrong||{};s.sent=s.sent||{};
+  return s;
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function D(){
+  const k=today();
+  const r=S.daily[k]||(S.daily[k]={w:{},s:{},enDone:false,aiDone:false,aiOk:0,fitDone:false,fitOk:0,finDone:false,finOk:0});
+  r.w=r.w||{};r.s=r.s||{};
+  return r;
+}
+/* 今日英语完成判定：词 + 句掌握数达到 30 即视为完成 */
+function checkEnDone(){
+  const d=D();
+  const n=Object.keys(d.w||{}).length+Object.keys(d.s||{}).length;
+  if(n>=30&&!d.enDone){d.enDone=true;save();toast('英语模块今日完成 ✓');}
+}
+function dayNo(){return diffDays(S.start,today())+1;}
+function streak(){
+  let n=0,d=today();
+  while(true){
+    const r=S.daily[d];
+    const done=r&&(r.enDone||r.aiDone||r.fitDone||r.finDone||Object.keys(r.w||{}).length>=8||Object.keys(r.s||{}).length>=5);
+    if(!done){if(d===today()){d=dateAdd(d,-1);continue;}break;}
+    n++;d=dateAdd(d,-1);
+  }
+  return n;
+}
+
+/* ============ 音频 / 语音 ============ */
+let voice=null;
+function pickVoice(){
+  const vs=speechSynthesis.getVoices()||[];
+  voice = vs.find(v=>/en-US/.test(v.lang)&&/Female|Samantha|Zira|Google US/i.test(v.name)) ||
+          vs.find(v=>/en-US/.test(v.lang)) || vs.find(v=>/en-GB/.test(v.lang)) ||
+          vs.find(v=>/^en/.test(v.lang)) || null;
+}
+if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+function speak(text,rate){
+  if(!('speechSynthesis' in window)){toast('当前浏览器不支持发音');return;}
+  try{speechSynthesis.cancel();}catch(e){}
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US';u.rate=rate||0.85;u.pitch=1;
+  if(voice)u.voice=voice;
+  speechSynthesis.speak(u);
+}
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec=null;
+function sim(a,b){
+  a=(a||'').toLowerCase().replace(/[^a-z' ]/g,'').trim();
+  b=(b||'').toLowerCase().replace(/[^a-z' ]/g,'').trim();
+  if(!a)return 0;
+  if(a===b)return 1;
+  const m=a.length,n=b.length,dp=[];
+  for(let i=0;i<=m;i++){dp[i]=[i];}
+  for(let j=0;j<=n;j++)dp[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){
+    dp[i][j]=Math.min(dp[i-1][j]+1,dp[i][j-1]+1,dp[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  }
+  return 1-dp[m][n]/Math.max(m,n);
+}
+
+/* ============ 数据切片 ============ */
+/* 当日加练次数：每天自动清零 */
+function EX(){
+  if(!S.extra||S.extra.d!==today()) S.extra={d:today(),en:0,ai:0,fit:0,fin:0};
+  return S.extra;
+}
+/* 环形取片，不足时自动从头续 */
+function wheel(arr,n,start){
+  const out=[];const L=arr.length;
+  for(let i=0;i<n&&L;i++)out.push(arr[((start+i)%L+L)%L]);
+  return out;
+}
+function todayWords(){
+  const ex=EX(), b=dayNo()-1;
+  return {
+    daily: wheel(DAILY_WORDS,20,b*20+ex.en*20),
+    ai:    wheel(AI_WORDS,10,b*10+ex.en*10),
+    sent:  wheel(DAILY_SENTENCES,10,b*10+ex.en*10)
+  };
+}
+function todaySent(){return todayWords().sent;}
+function lesson(pool){
+  const n=dayNo()-1;
+  return pool[n%pool.length];
+}
+function courseDone(k){
+  const d=D();
+  return k==='ai'?d.aiDone:k==='fit'?d.fitDone:d.finDone;
+}
+function courseOk(k){
+  const d=D();
+  return k==='ai'?d.aiOk:k==='fit'?d.fitOk:d.finOk;
+}
+
+/* ============ 视图路由 ============ */
+const TABS=[
+  {k:'today',i:'🏠',t:'今日'},
+  {k:'english',i:'🔤',t:'英语'},
+  {k:'ai',i:'🤖',t:'AI'},
+  {k:'fitness',i:'💪',t:'健身'},
+  {k:'finance',i:'📈',t:'金融'},
+  {k:'me',i:'👤',t:'我的'}
+];
+let route='today';
+let enMode='list';   // list | read | write | blank
+let enGroup='daily'; // daily | ai | sent
+let flashIdx=0, writingIdx=0;
+
+function go(k){
+  route=k;enMode='list';
+  try{history.replaceState(null,'','#'+k);}catch(e){}
+  window.scrollTo(0,0);render();
+}
+function roundNo(sp){return Math.floor((dayNo()-1)/sp)+1;}
+function render(){
+  $('#tabs').innerHTML=TABS.map(t=>`<button class="${route===t.k?'on':''}" data-go="${t.k}"><i>${t.i}</i>${t.t}</button>`).join('');
+  $('#tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>go(b.dataset.go));
+  const v=$('#view');
+  if(route==='today')v.innerHTML=viewToday();
+  else if(route==='english')v.innerHTML=viewEnglish();
+  else if(route==='ai')v.innerHTML=viewCourse('ai');
+  else if(route==='fitness')v.innerHTML=viewCourse('fit');
+  else if(route==='finance')v.innerHTML=viewCourse('fin');
+  else v.innerHTML=viewMe();
+  bindView();
+}
+function topBar(){
+  const titles={today:'今日学习',english:'英语',ai:'AI 知识',fitness:'健身',finance:'金融',me:'我的'};
+  $('#topbar').innerHTML=`<div><div class="ttl">${titles[route]}</div>
+    <div class="sub">第 ${dayNo()} 天 · 连续打卡 ${streak()} 天</div></div>
+    <button class="icon-btn" id="nightBtn">${S.night?'☀️':'🌙'}</button>`;
+  $('#nightBtn').onclick=()=>{S.night=!S.night;body_night();save();render();};
+}
+function body_night(){document.body.classList.toggle('night',!!S.night);}
+body_night();
+
+/* ============ 今日 ============ */
+function viewToday(){
+  const d=D(), w=d.w||{}, tw=todayWords();
+  const learnedW=Object.keys(w).length, learnedS=Object.keys(d.s||{}).length;
+  const total=40, learned=learnedW+learnedS;
+  const doneCount=[d.enDone,d.aiDone,d.fitDone,d.finDone].filter(Boolean).length;
+  const pct=Math.round(doneCount/4*100);
+  const allDone=doneCount===4;
+  const mods=[
+    {k:'english',c:'var(--en)',i:'🔤',n:'英语',s:`${learnedW} 词 · ${learnedS} 句`,p:Math.min(1,learned/total)},
+    {k:'ai',c:'var(--ai)',i:'🤖',n:'AI 知识',s:d.aiDone?'今日已完成':'1 节新课',p:d.aiDone?1:0},
+    {k:'fitness',c:'var(--fit)',i:'💪',n:'健身',s:d.fitDone?'今日已完成':'1 节新课',p:d.fitDone?1:0},
+    {k:'finance',c:'var(--fin)',i:'📈',n:'金融',s:d.finDone?'今日已完成':'1 节新课',p:d.finDone?1:0}
+  ];
+  const aiL=lesson(AI_LESSONS), fitL=lesson(FIT_LESSONS), finL=lesson(FIN_LESSONS);
+  return `
+  <div class="hero">
+    <div class="row">
+      <div style="flex:1">
+        <div class="t">${today()} · DAY ${dayNo()}</div>
+        <div class="n">${allDone?'今天全部完成，太强了 🎉':(doneCount===0?'今天从 30 词 + 10 句开始':'完成 '+doneCount+'/4，继续保持')}</div>
+      </div>
+      <div class="ring" style="--p:${pct}"><span>${pct}<small>%</small></span></div>
+    </div>
+    <div class="row" style="margin-top:14px;gap:16px;font-size:11px;opacity:.9">
+      <div>🔥 连续 ${streak()} 天</div>
+      <div>📚 单词 ${Object.keys(S.seen).length}</div>
+      <div>💬 句子 ${Object.keys(S.sent||{}).length}</div>
+    </div>
+  </div>
+
+  <h2 class="sec">今日任务</h2>
+  <div class="grid2">
+    ${mods.map(m=>`
+      <div class="card tap" data-go="${m.k}" style="margin-bottom:0">
+        <div class="row" style="gap:8px">
+          <div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;background:rgba(91,108,255,.08)">${m.i}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13.5px;font-weight:700">${m.n}</div>
+            <div class="tiny muted" style="margin-top:2px">${m.s}</div>
+          </div>
+        </div>
+        <div class="prog" style="margin-top:12px"><i style="width:${Math.round(m.p*100)}%;background:${m.c}"></i></div>
+      </div>`).join('')}
+  </div>
+
+  <h2 class="sec">今天的学习内容（已为你生成）</h2>
+  <div class="card">
+    <div class="row" style="align-items:flex-start;flex-direction:column;gap:6px">
+      <div class="row" style="width:100%"><span class="lv">AI</span><div class="spacer"></div><span class="tiny muted">${aiL.lv}</span></div>
+      <div class="bold sm" style="margin-top:2px">${aiL.t}</div>
+      <div class="tiny muted">${aiL.sum}</div>
+    </div>
+    <div style="height:1px;background:var(--line);margin:12px 0"></div>
+    <div class="row" style="align-items:flex-start;flex-direction:column;gap:6px">
+      <div class="row" style="width:100%"><span class="lv" style="background:rgba(18,183,106,.12);color:var(--ok)">健身</span><div class="spacer"></div><span class="tiny muted">${fitL.lv}</span></div>
+      <div class="bold sm" style="margin-top:2px">${fitL.t}</div>
+      <div class="tiny muted">${fitL.sum}</div>
+    </div>
+    <div style="height:1px;background:var(--line);margin:12px 0"></div>
+    <div class="row" style="align-items:flex-start;flex-direction:column;gap:6px">
+      <div class="row" style="width:100%"><span class="lv" style="background:rgba(247,144,9,.14);color:var(--fin)">金融</span><div class="spacer"></div><span class="tiny muted">${finL.lv}</span></div>
+      <div class="bold sm" style="margin-top:2px">${finL.t}</div>
+      <div class="tiny muted">${finL.sum}</div>
+    </div>
+  </div>
+
+  <h2 class="sec">今日英语</h2>
+  <div class="card tap" data-go="english">
+    <div class="row">
+      <div style="flex:1;min-width:0">
+        <div class="bold sm">${tw.daily.slice(0,2).map(w=>w[0]).join(' · ')} · … · ${tw.sent[0][0]}</div>
+        <div class="tiny muted" style="margin-top:4px">20 日常词 + 10 AI 词 + 10 句子，支持跟读、默写、填空</div>
+      </div>
+      <div class="pill pri">去学习</div>
+    </div>
+  </div>
+
+  <button class="btn btn-main" id="checkin" style="margin-top:6px">${allDone?'今日已全部完成 ✓':'查看打卡规则'}</button>
+  `;
+}
+
+/* ============ 英语 ============ */
+function viewEnglish(){
+  const d=D(), tw=todayWords();
+  if(enMode==='read')return viewRead();
+  if(enMode==='write')return viewWrite();
+  if(enMode==='blank')return viewBlank();
+  const learned=Object.keys(d.w||{}).length;
+  const sDone=Object.keys(d.s||{}).length;
+  const ex=EX();
+  const wordTarget=30+ex.en*30, sentTarget=10+ex.en*10;
+  const seenN=Object.keys(S.seen||{}).length;
+  const dayP=Math.min(100,Math.round(dayNo()/365*100));
+  const planCard=`
+  <div class="card" style="padding:14px 16px">
+    <div class="row">
+      <div style="flex:1;min-width:0">
+        <div class="tiny muted">雅思 6 分 · 一年规划</div>
+        <div style="font-size:13px;font-weight:700;margin-top:4px">6000 核心词 · 每天 20 词 + 10 AI 词 + 10 句</div>
+      </div>
+      <span class="lv">DAY ${dayNo()}/365</span>
+    </div>
+    <div class="prog" style="margin-top:12px"><i style="width:${dayP}%;background:linear-gradient(90deg,var(--pri),var(--pri2))"></i></div>
+    <div class="row tiny muted" style="margin-top:8px">
+      <span>已掌握 ${seenN} / 6000</span><div class="spacer"></div><span>词库已装载 ${DAILY_WORDS.length} 词</span>
+    </div>
+  </div>`;
+  const groupBar=`
+    <div style="margin-bottom:10px">
+      <span class="chip ${enGroup==='daily'?'on':''}" data-g="daily">日常单词 20</span>
+      <span class="chip ${enGroup==='ai'?'on':''}" data-g="ai">AI 单词 10</span>
+      <span class="chip ${enGroup==='sent'?'on':''}" data-g="sent">句子 10</span>
+    </div>
+    <div class="row" style="gap:8px;margin-bottom:12px;justify-content:flex-end">
+      <button class="btn btn-soft btn-sm" id="plusEn">＋ 加练一组</button>
+      ${ex.en>0?`<button class="btn btn-ghost btn-sm" id="backEn">↩ 今日组（已加练 ${ex.en} 组）</button>`:''}
+    </div>`;
+
+  if(enGroup==='sent'){
+    const list=tw.sent;
+    return groupBar + `
+    <div class="card">
+      <div class="row">
+        <div style="flex:1;min-width:0">
+          <div class="bold" style="font-size:15px">今日句子 ${sDone}/${sentTarget}</div>
+          <div class="tiny muted" style="margin-top:3px">先听整句 → 跟读 → 再做填空，顺序别跳</div>
+        </div>
+      </div>
+      <div class="prog" style="margin-top:12px"><i style="width:${Math.min(100,Math.round(sDone/sentTarget*100))}%;background:linear-gradient(90deg,var(--pri),var(--pri2))"></i></div>
+      <div class="row" style="margin-top:14px;gap:10px">
+        <button class="btn btn-soft btn-sm" id="sRead" style="flex:1">🎤 句子跟读</button>
+        <button class="btn btn-soft btn-sm" id="sBlank" style="flex:1">🧩 填空练习</button>
+        <button class="btn btn-ghost btn-sm" id="sAll" style="flex:1">🔊 整句听</button>
+      </div>
+    </div>
+
+    <h2 class="sec">今日句子 · 10 句</h2>
+    <div class="card" style="padding:4px 16px">
+      ${list.map((s,i)=>{
+        const on=(d.s||{})[s[0]];
+        return `<div class="wrow" data-i="${i}" data-grp="sent">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:600;line-height:1.55">${s[0]}</div>
+            <div class="tiny muted" style="margin-top:5px;line-height:1.5">${s[1]}</div>
+          </div>
+          <button class="snd" data-say="${s[0]}">🔊</button>
+          <div class="chk ${on?'on':''}" data-smk="${i}">✓</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="card" style="background:rgba(91,108,255,.06);border:1px solid rgba(91,108,255,.18)">
+      <div class="tiny muted" style="line-height:1.7">零基础学法：先把 10 句听懂、跟读一遍，能认出句子里的关键词就算过。填空练习会帮你把关键词记牢。</div>
+    </div>`;
+  }
+
+  const list = enGroup==='daily'? tw.daily : tw.ai;
+  return groupBar + (enGroup==='daily'?planCard:'') + `
+  <div class="card">
+    <div class="row">
+      <div style="flex:1;min-width:0">
+        <div class="bold" style="font-size:15px">今日已掌握 ${learned}/${wordTarget}</div>
+        <div class="tiny muted" style="margin-top:3px">${roundNo(10)>1?'第 '+roundNo(10)+' 轮复习 · ':''}点卡片听发音，右侧圆圈标记「已认识」</div>
+      </div>
+    </div>
+    <div class="prog" style="margin-top:12px"><i style="width:${Math.min(100,Math.round(learned/wordTarget*100))}%;background:linear-gradient(90deg,var(--pri),var(--pri2))"></i></div>
+    <div class="row" style="margin-top:14px;gap:10px">
+      <button class="btn btn-soft btn-sm" id="mRead" style="flex:1">🎤 跟读练习</button>
+      <button class="btn btn-soft btn-sm" id="mWrite" style="flex:1">✍️ 默写测试</button>
+      <button class="btn btn-ghost btn-sm" id="mAll" style="flex:1">🔊 顺序听</button>
+    </div>
+  </div>
+
+  <h2 class="sec">${enGroup==='daily'?'日常单词 · 20 个':'AI 单词 · 10 个'}</h2>
+  <div class="card" style="padding:4px 16px">
+    ${list.map((w,i)=>{
+      const on=(d.w||{})[w[0]];
+      return `<div class="wrow" data-i="${i}">
+        <div style="flex:1;min-width:0">
+          <div class="wword">${w[0]}</div>
+          <div class="wipa">${w[1]||''}</div>
+          <div class="wcn">${w[2]}</div>
+          <div class="tiny muted" style="margin-top:4px;line-height:1.5">${w[3]||''}</div>
+        </div>
+        <button class="snd" data-say="${w[0]}">🔊</button>
+        <div class="chk ${on?'on':''}" data-mark="${w[0]}">✓</div>
+      </div>`;
+    }).join('')}
+  </div>
+  ${enGroup==='daily'?`<div class="card" style="background:rgba(91,108,255,.06);border:1px solid rgba(91,108,255,.18)">
+    <div class="tiny muted" style="line-height:1.7">零基础提示：先按 🔊 听 2 遍，跟着读 1 遍，再看中文意思。不用背，今天的目标是「眼熟 + 耳朵熟」。</div>
+  </div>`:''}
+  `;
+}
+
+function viewRead(){
+  const d=D(), tw=todayWords();
+  const isS = enGroup==='sent';
+  const list = isS? tw.sent : (enGroup==='daily'? tw.daily : tw.ai);
+  flashIdx=Math.min(flashIdx,list.length-1);
+  const w=list[flashIdx];
+  return `
+  <div class="row" style="margin-bottom:14px">
+    <button class="icon-btn" id="backList">←</button>
+    <div class="spacer"></div>
+    <div class="tiny muted">${isS?'句子跟读':'跟读'} ${flashIdx+1} / ${list.length}</div>
+  </div>
+  <div class="flash">
+    ${isS?`
+      <div class="w" style="font-size:23px;line-height:1.4;letter-spacing:0">${w[0]}</div>
+      <div class="cn" style="margin-top:16px;font-size:15px;font-weight:600">${w[1]}</div>
+      <div class="ex" style="margin-top:12px">关键词：<b style="opacity:.95">${w[2]}</b></div>
+    `:`
+      <div class="w">${w[0]}</div>
+      <div class="ipa">${w[1]||''}</div>
+      <div class="cn">${w[2]}</div>
+      <div class="ex">${w[3]||''}<br><span style="opacity:.7">${w[4]||''}</span></div>
+    `}
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:14px">
+    <button class="btn btn-ghost btn-sm" id="playN" style="flex:1">🔊 常速</button>
+    <button class="btn btn-ghost btn-sm" id="playS" style="flex:1">🐢 慢速</button>
+  </div>
+  <div class="card" style="text-align:center;padding:20px 16px">
+    <button class="mic" id="micBtn">🎤</button>
+    <div class="hint" id="hint">点击麦克风，${isS?'把整句读一遍':'读一遍「'+w[0]+'」'}</div>
+    <div class="tiny muted" style="margin-top:6px">${SR?(isS?'整句读对 70% 以上算过':'说完即可看到发音评分'):'当前浏览器不支持语音识别，可用'+(isS?'填空练习':'默写练习')+'代替'}</div>
+  </div>
+  <div class="row" style="gap:10px">
+    <button class="btn btn-ghost" id="prevW" style="flex:1">上一个</button>
+    <button class="btn btn-main" id="nextW" style="flex:1">下一个</button>
+  </div>`;
+}
+
+function viewWrite(){
+  const d=D(), tw=todayWords();
+  const list = (enGroup==='daily'? tw.daily : tw.ai);
+  writingIdx=Math.min(writingIdx,list.length-1);
+  const w=list[writingIdx];
+  return `
+  <div class="row" style="margin-bottom:14px">
+    <button class="icon-btn" id="backList">←</button>
+    <div class="spacer"></div>
+    <div class="tiny muted">默写 ${writingIdx+1} / ${list.length}</div>
+  </div>
+  <div class="card" style="text-align:center;padding:26px 18px">
+    <div style="font-size:13px;color:var(--ink2)">请默写这个单词：</div>
+    <div style="font-size:25px;font-weight:800;margin-top:12px;line-height:1.4;letter-spacing:1px">${w[2]}</div>
+    <div class="tiny muted" style="margin-top:8px">首字母提示：<b>${w[0][0]}</b> · 共 ${w[0].length} 个字母</div>
+    <button class="btn btn-soft btn-sm" id="hearIt" style="margin-top:14px">🔊 听发音</button>
+  </div>
+  <input type="text" id="ans" placeholder="在这里输入英文…" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <div class="hint" id="hint" style="margin-bottom:12px"></div>
+  <div class="row" style="gap:10px">
+    <button class="btn btn-ghost" id="skipW" style="flex:1">跳过</button>
+    <button class="btn btn-main" id="checkW" style="flex:1">检查</button>
+  </div>
+  <div class="tiny muted" style="text-align:center;margin-top:14px">做错的词会自动进入「我的」页的错词本</div>`;
+}
+
+/* 句子填空 */
+function blankify(s){
+  const kw=s[2];
+  try{
+    const esc=kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const r=new RegExp('\\b'+esc+'\\b','i');
+    if(r.test(s[0]))return s[0].replace(r,'______');
+  }catch(e){}
+  return s[0].replace(new RegExp(kw,'i'),'______');
+}
+function viewBlank(){
+  const list=todayWords().sent;
+  writingIdx=Math.min(writingIdx,list.length-1);
+  const w=list[writingIdx], kw=w[2];
+  return `
+  <div class="row" style="margin-bottom:14px">
+    <button class="icon-btn" id="backList">←</button>
+    <div class="spacer"></div>
+    <div class="tiny muted">句子填空 ${writingIdx+1} / ${list.length}</div>
+  </div>
+  <div class="card" style="padding:22px 18px">
+    <div class="tiny muted">补全下面句子中的空格：</div>
+    <div style="font-size:19px;font-weight:700;line-height:1.6;margin-top:14px">${blankify(w)}</div>
+    <div class="tiny muted" style="margin-top:12px;line-height:1.6">${w[1]}</div>
+    <button class="btn btn-soft btn-sm" id="hearIt" style="margin-top:14px">🔊 听整句</button>
+  </div>
+  <input type="text" id="ans" placeholder="填入缺的那个英文单词…" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <div class="hint" id="hint" style="margin-bottom:12px">提示：答案以 <b>${kw[0]}</b> 开头，共 ${kw.length} 个字母</div>
+  <div class="row" style="gap:10px">
+    <button class="btn btn-ghost" id="skipW" style="flex:1">跳过</button>
+    <button class="btn btn-main" id="checkW" style="flex:1">检查</button>
+  </div>
+  <div class="tiny muted" style="text-align:center;margin-top:14px">填对即计入今日句子进度</div>`;
+}
+
+/* ============ 课程页 ============ */
+const C = {
+  ai:{name:'AI 知识',color:'var(--ai)',pool:()=>AI_LESSONS,intro:'从零理解 AI，每天一小节，初级 → 中级 → 高级'},
+  fit:{name:'健身',color:'var(--fit)',pool:()=>FIT_LESSONS,intro:'系统学习训练与营养理论，练得对才练得有效'},
+  fin:{name:'金融',color:'var(--fin)',pool:()=>FIN_LESSONS,intro:'每天一小节金融常识，看懂钱是怎么运转的'}
+};
+function lessonStep(k){const ex=EX();return k==='ai'?ex.ai:k==='fit'?ex.fit:ex.fin;}
+function lessonFor(k){const p=C[k].pool();return p[(dayNo()-1+lessonStep(k))%p.length];}
+function lessonIdx(k){const p=C[k].pool();return (dayNo()-1+lessonStep(k))%p.length;}
+function viewCourse(k){
+  const L=lessonFor(k), done=courseDone(k), ok=courseOk(k);
+  const pool=C[k].pool(), idx=lessonIdx(k), step=lessonStep(k);
+  const past=pool.slice(0,Math.max(0,idx));
+  return `
+  <div class="card" style="background:linear-gradient(135deg,rgba(91,108,255,.09),rgba(139,92,246,.09));border:1px solid rgba(91,108,255,.15)">
+    <div class="row">
+      <div style="flex:1">
+        <div class="tiny muted">${C[k].intro}</div>
+        <div class="bold" style="font-size:14px;margin-top:6px">${step>0?'加练第 '+step+' 节':'今日第 '+(idx+1)+' 节'} · ${L.lv}${roundNo(15)>1?' · 第 '+roundNo(15)+' 轮':''}</div>
+      </div>
+      ${done?'<span class="pill" style="background:rgba(18,183,106,.14);color:var(--ok)">已完成</span>':'<span class="pill pri">待学习</span>'}
+    </div>
+    <div class="row" style="margin-top:14px;gap:8px;justify-content:flex-end">
+      <button class="btn btn-soft btn-sm" id="plusCourse">＋ 加练一节</button>
+      ${step>0?`<button class="btn btn-ghost btn-sm" id="backCourse">↩ 回到今日课</button>`:''}
+    </div>
+    ${step>0?'<div class="tiny muted" style="margin-top:8px">加练内容是提前学，之后按日程还会再遇到，相当于复习一遍。</div>':''}
+  </div>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:6px"><span class="lv">${L.lv}</span></div>
+    <h3 style="font-size:18px;margin:8px 0 4px;line-height:1.4">${L.t}</h3>
+    <div class="tiny muted" style="margin-bottom:6px">预计 ${L.min||6} 分钟</div>
+    ${L.pts.map((p,i)=>`<div class="li"><b>${i+1}.</b><div>${p}</div></div>`).join('')}
+    <div style="background:rgba(91,108,255,.07);border-radius:12px;padding:12px;margin-top:14px">
+      <div class="tiny" style="font-weight:700;margin-bottom:4px">一句话记住</div>
+      <div class="sm" style="line-height:1.7">${L.sum}</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:12px"><div class="bold sm">随堂自测</div><div class="spacer"></div><div class="tiny muted">答对即完成本节</div></div>
+    <div class="sm" style="line-height:1.7;margin-bottom:12px;font-weight:600">${L.q.q}</div>
+    <div id="opts">
+      ${L.q.o.map((o,i)=>`<button class="opt" data-o="${i}">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+    </div>
+    <div class="hint" id="hint" style="text-align:left;margin-top:4px"></div>
+  </div>
+
+  ${k==='fit'?`
+  <h2 class="sec">今日训练清单（可自选）</h2>
+  <div class="card">
+    ${(L.plan||[]).map(x=>`<div class="wrow" style="border-bottom:1px solid var(--line);cursor:default"><div style="flex:1"><div class="sm" style="font-weight:600">${x[0]}</div><div class="tiny muted" style="margin-top:2px">${x[1]}</div></div><div class="tiny" style="color:var(--ink2)">${x[2]}</div></div>`).join('')||'<div class="tiny muted">本节课为理论内容，无需训练清单</div>'}
+  </div>`:''}
+
+  <h2 class="sec">往期课程（点击复习）</h2>
+  ${past.length?past.map((p,i)=>`<div class="acc" data-acc="${i}"><div class="h"><span class="lv" style="flex-shrink:0">${p.lv}</span><div style="flex:1">${p.t}</div><span class="tiny muted">▾</span></div><div class="body">${p.pts.map(x=>'· '+x).join('<br>')}<br><b>要点：</b>${p.sum}</div></div>`).join(''):'<div class="card"><div class="tiny muted">今天是你学习的第一节，往期课程会在这里累积。</div></div>'}
+  `;
+}
+
+/* ============ 我的 ============ */
+function viewMe(){
+  const seen=Object.keys(S.seen).length;
+  const sentN=Object.keys(S.sent||{}).length;
+  const wrongN=Object.keys(S.wrong).length;
+  const days=Object.keys(S.daily).filter(d=>{
+    const r=S.daily[d];return r&&(r.enDone||r.aiDone||r.fitDone||r.finDone||Object.keys(r.w||{}).length>=8||Object.keys(r.s||{}).length>=5);
+  }).length;
+  const aiDone=Object.values(S.daily).filter(r=>r.aiDone).length;
+  const fitDone=Object.values(S.daily).filter(r=>r.fitDone).length;
+  const finDone=Object.values(S.daily).filter(r=>r.finDone).length;
+  // 热力图：最近 42 天（6 周）
+  let heat='';
+  for(let i=41;i>=0;i--){
+    const d=dateAdd(today(),-i), r=S.daily[d];
+    let v=0;
+    if(r){const c=[r.enDone,r.aiDone,r.fitDone,r.finDone].filter(Boolean).length; v=c>=4?3:c>=2?2:c>=1?1:0;}
+    heat+=`<div class="v${v}" title="${d}"></div>`;
+  }
+  return `
+  <div class="card" style="text-align:center;padding:22px">
+    <div style="width:64px;height:64px;border-radius:50%;margin:0 auto;background:linear-gradient(135deg,var(--pri),var(--pri2));display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff">🧠</div>
+    <div class="bold" style="font-size:17px;margin-top:12px">${S.nick}</div>
+    <div class="tiny muted" style="margin-top:4px">学习第 ${dayNo()} 天 · 已打卡 ${days} 天</div>
+  </div>
+
+  <div class="grid2">
+    <div class="stat"><b>${streak()}</b><span>连续打卡（天）</span></div>
+    <div class="stat"><b>${seen}</b><span>认识的单词</span></div>
+    <div class="stat"><b>${sentN}</b><span>学过的句子</span></div>
+    <div class="stat"><b>${aiDone+fitDone+finDone}</b><span>完成的知识课节</span></div>
+  </div>
+
+  <h2 class="sec">打卡热力图（近 6 周）</h2>
+  <div class="card">
+    <div class="heat">${heat}</div>
+    <div class="row tiny muted" style="margin-top:10px;gap:6px;justify-content:flex-end">
+      <span>少</span><div style="width:11px;height:11px;border-radius:4px;background:var(--line)"></div>
+      <div style="width:11px;height:11px;border-radius:4px;background:rgba(91,108,255,.35)"></div>
+      <div style="width:11px;height:11px;border-radius:4px;background:rgba(91,108,255,.62)"></div>
+      <div style="width:11px;height:11px;border-radius:4px;background:var(--pri)"></div><span>多</span>
+    </div>
+  </div>
+
+  <h2 class="sec">模块进度</h2>
+  <div class="card">
+    ${[['英语单词',seen,300,'var(--en)'],['英语句子',sentN,100,'var(--en)'],['AI 课程',aiDone,15,'var(--ai)'],['健身课程',fitDone,15,'var(--fit)'],['金融课程',finDone,15,'var(--fin)']].map(([n,v,m,c])=>`
+      <div style="margin-bottom:14px">
+        <div class="row tiny" style="margin-bottom:6px"><span style="font-weight:600">${n}</span><div class="spacer"></div><span class="muted">${v}/${m}</span></div>
+        <div class="prog"><i style="width:${Math.min(100,Math.round(v/m*100))}%;background:${c}"></i></div>
+      </div>`).join('')}
+  </div>
+
+  <h2 class="sec">错词本（${wrongN}）</h2>
+  <div class="card">
+    ${wrongN?Object.keys(S.wrong).slice(0,20).map(k=>`<div class="wrow" style="cursor:default"><div style="flex:1"><div class="wword" style="font-size:15px">${S.wrong[k]}</div><div class="tiny muted">你写成了：${k}</div></div><button class="snd" data-say="${S.wrong[k]}">🔊</button></div>`).join(''):'<div class="tiny muted">还没有错词，默写时拼错的词会自动收集到这里。</div>'}
+  </div>
+
+  <h2 class="sec">设置</h2>
+  <div class="card" style="padding:4px 16px">
+    <div class="wrow" style="cursor:default" id="nickRow"><div style="flex:1"><div class="sm" style="font-weight:600">修改昵称</div></div><div class="tiny muted">${S.nick} ›</div></div>
+    <div class="wrow" style="cursor:default" id="nightRow"><div style="flex:1"><div class="sm" style="font-weight:600">夜间模式</div></div><div class="tiny muted">${S.night?'已开启':'已关闭'} ›</div></div>
+    <div class="wrow" style="cursor:default" id="resetRow"><div style="flex:1"><div class="sm" style="font-weight:600">清空学习数据</div><div class="tiny muted" style="margin-top:3px">进度、打卡、错词全部重置</div></div><div class="tiny" style="color:var(--bad)">重置</div></div>
+  </div>
+  <div class="tiny muted" style="text-align:center;margin:18px 0 8px">认知成长 · 每日学习 · 所有数据保存在本机</div>
+  `;
+}
+
+/* ============ 事件绑定 ============ */
+function bindView(){
+  $('#view').querySelectorAll('[data-go]').forEach(n=>n.onclick=()=>go(n.dataset.go));
+  $('#view').querySelectorAll('[data-say]').forEach(n=>n.onclick=(e)=>{e.stopPropagation();speak(n.dataset.say);});
+  $('#view').querySelectorAll('[data-acc]').forEach(n=>n.onclick=()=>n.classList.toggle('open'));
+
+  const checkin=$('#checkin'); if(checkin)checkin.onclick=()=>{
+    const d=D();
+    const done=[d.enDone,d.aiDone,d.fitDone,d.finDone].filter(Boolean).length;
+    if(done===4)toast('今天已全部完成 🎉');
+    else toast('完成任意模块即算打卡，当前 '+done+'/4');
+  };
+
+  // 加练（英语 / 课程）
+  const plusEn=$('#plusEn');
+  if(plusEn){
+    plusEn.onclick=()=>{const ex=EX();ex.en+=1;flashIdx=0;writingIdx=0;enMode='list';save();render();toast('进入加练：第 '+ex.en+' 组');};
+    const b=$('#backEn');if(b)b.onclick=()=>{EX().en=0;flashIdx=0;writingIdx=0;save();render();toast('已回到今日组');};
+  }
+  const plusCourse=$('#plusCourse');
+  if(plusCourse){
+    const k=route==='ai'?'ai':route==='fitness'?'fit':'fin';
+    plusCourse.onclick=()=>{const ex=EX();ex[k]+=1;save();render();toast('进入加练：第 '+ex[k]+' 节');};
+    const b=$('#backCourse');if(b)b.onclick=()=>{EX()[k]=0;save();render();toast('已回到今日课');};
+  }
+
+  // 英语 · 分组切换（单词 / AI 单词 / 句子）
+  $('#view').querySelectorAll('[data-g]').forEach(n=>n.onclick=()=>{enGroup=n.dataset.g;flashIdx=0;writingIdx=0;enMode='list';render();});
+
+  // 英语列表（单词组）
+  const mRead=$('#mRead');
+  if(mRead){
+    mRead.onclick=()=>{flashIdx=0;enMode='read';render();};
+    $('#mWrite').onclick=()=>{writingIdx=0;enMode='write';render();};
+    $('#mAll').onclick=()=>{
+      const list=(enGroup==='daily'?todayWords().daily:todayWords().ai).map(x=>x[0]);
+      let i=0;const nx=()=>{if(i<list.length){speak(list[i++],0.85);setTimeout(nx,900);}};nx();
+      toast('开始顺序播放 '+list.length+' 个单词');
+    };
+    $('#view').querySelectorAll('[data-mark]').forEach(n=>n.onclick=(e)=>{
+      e.stopPropagation();
+      const w=n.dataset.mark, d=D();
+      if(d.w[w]){delete d.w[w];}else{d.w[w]=1;S.seen[w]=1;speak(w);}
+      save();checkEnDone();render();
+    });
+    $('#view').querySelectorAll('.wrow[data-i]:not([data-grp])').forEach(n=>n.onclick=()=>{
+      const list=(enGroup==='daily'?todayWords().daily:todayWords().ai);
+      speak(list[+n.dataset.i][0]);
+    });
+  }
+
+  // 英语列表（句子组）
+  const sRead=$('#sRead');
+  if(sRead){
+    sRead.onclick=()=>{flashIdx=0;enMode='read';render();};
+    $('#sBlank').onclick=()=>{writingIdx=0;enMode='blank';render();};
+    $('#sAll').onclick=()=>{
+      const list=todayWords().sent;let i=0;
+      const nx=()=>{if(i<list.length){speak(list[i++][0],0.9);setTimeout(nx,2600);}};nx();
+      toast('开始顺序朗读 '+list.length+' 句');
+    };
+    $('#view').querySelectorAll('[data-smk]').forEach(n=>n.onclick=(e)=>{
+      e.stopPropagation();
+      const s=todayWords().sent[+n.dataset.smk], d=D();
+      if(d.s[s[0]]){delete d.s[s[0]];}else{d.s[s[0]]=1;S.sent[s[0]]=1;speak(s[0],0.9);}
+      save();checkEnDone();render();
+    });
+    $('#view').querySelectorAll('.wrow[data-grp="sent"]').forEach(n=>n.onclick=()=>{
+      speak(todayWords().sent[+n.dataset.i][0],0.9);
+    });
+  }
+
+  // 跟读（单词 / 句子通用）
+  if(enMode==='read'&&route==='english'){
+    const isS=enGroup==='sent';
+    const list=isS?todayWords().sent:(enGroup==='daily'?todayWords().daily:todayWords().ai);
+    $('#backList').onclick=()=>{enMode='list';render();};
+    $('#playN').onclick=()=>speak(list[flashIdx][0],isS?0.9:0.85);
+    $('#playS').onclick=()=>speak(list[flashIdx][0],0.55);
+    $('#prevW').onclick=()=>{flashIdx=Math.max(0,flashIdx-1);render();};
+    $('#nextW').onclick=()=>{flashIdx=Math.min(list.length-1,flashIdx+1);render();};
+    const mic=$('#micBtn'), hint=$('#hint');
+    mic.onclick=()=>{
+      if(!SR){hint.innerHTML='<span class="res-bad">此浏览器不支持语音识别</span>，请用'+(isS?'句子填空':'默写练习');return;}
+      if(rec){try{rec.stop();}catch(e){}} 
+      rec=new SR();rec.lang='en-US';rec.interimResults=false;rec.maxAlternatives=3;
+      mic.classList.add('rec');hint.textContent=isS?'正在听…请把整句读完':'正在听…请读一遍';
+      const pass=isS?0.7:0.85, near=isS?0.45:0.55;
+      rec.onresult=(ev)=>{
+        mic.classList.remove('rec');
+        let best='',bs=0;
+        for(let i=0;i<ev.results.length;i++)for(let j=0;j<ev.results[i].length;j++){
+          const s=sim(list[flashIdx][0],ev.results[i][j].transcript);if(s>bs){bs=s;best=ev.results[i][j].transcript;}
+        }
+        if(bs>=pass){
+          hint.innerHTML=`<span class="res-ok">${isS?'这句过了！':'很标准！'}</span> ${Math.round(bs*100)} 分`;
+          const d=D(),w=list[flashIdx][0];
+          if(isS){d.s[w]=1;S.sent[w]=1;}else{d.w[w]=1;S.seen[w]=1;}
+          save();checkEnDone();
+        }else if(bs>=near){
+          hint.innerHTML=`<span style="color:var(--warn);font-weight:700">接近了</span> 听到 “${best}” · ${Math.round(bs*100)} 分，再读一遍`;
+        }else{
+          hint.innerHTML=`<span class="res-bad">再试一次</span> 听到 “${best||''}”，可以点慢速发音跟一遍`;
+        }
+      };
+      rec.onerror=(e)=>{mic.classList.remove('rec');hint.innerHTML='<span class="res-bad">没听清</span>（'+e.error+'），请靠近麦克风再试';};
+      rec.onend=()=>mic.classList.remove('rec');
+      try{rec.start();}catch(e){mic.classList.remove('rec');hint.textContent='无法启动麦克风，请检查权限';}
+    };
+  }
+
+  // 默写（单词）
+  if(enMode==='write'&&route==='english'){
+    const list=(enGroup==='daily'?todayWords().daily:todayWords().ai);
+    const w=list[writingIdx], ans=$('#ans'), hint=$('#hint');
+    $('#backList').onclick=()=>{enMode='list';render();};
+    $('#hearIt').onclick=()=>speak(w[0]);
+    const check=()=>{
+      const v=ans.value.trim().toLowerCase();
+      if(!v){hint.innerHTML='<span class="muted">先写一个答案吧</span>';return;}
+      if(v===w[0].toLowerCase()){
+        hint.innerHTML='<span class="res-ok">正确！</span> '+w[0]+' · '+w[2];
+        const d=D(),k=w[0];d.w[k]=1;S.seen[k]=1;delete S.wrong[v];save();checkEnDone();
+        setTimeout(()=>{if(writingIdx<list.length-1){writingIdx++;render();}},900);
+      }else{
+        hint.innerHTML='<span class="res-bad">拼写不对</span> 正确写法是 <b>'+w[0]+'</b>';
+        S.wrong[v]=w[0];save();
+      }
+    };
+    $('#checkW').onclick=check;
+    ans.addEventListener('keydown',e=>{if(e.key==='Enter')check();});
+    $('#skipW').onclick=()=>{if(writingIdx<list.length-1){writingIdx++;render();}else{toast('已经是最后一个了');}};
+    setTimeout(()=>ans.focus(),300);
+  }
+
+  // 句子填空
+  if(enMode==='blank'&&route==='english'){
+    const list=todayWords().sent;
+    const w=list[writingIdx], kw=w[2], ans=$('#ans'), hint=$('#hint');
+    $('#backList').onclick=()=>{enMode='list';render();};
+    $('#hearIt').onclick=()=>speak(w[0],0.9);
+    const check=()=>{
+      const v=ans.value.trim().toLowerCase().replace(/[^a-z']/g,'');
+      if(!v){hint.innerHTML='<span class="muted">先填空吧</span>';return;}
+      if(v===kw.toLowerCase()){
+        hint.innerHTML='<span class="res-ok">填对了！</span> '+w[0];
+        const d=D();d.s[w[0]]=1;S.sent[w[0]]=1;save();checkEnDone();
+        setTimeout(()=>{if(writingIdx<list.length-1){writingIdx++;render();}},1000);
+      }else{
+        hint.innerHTML='<span class="res-bad">不对</span> 正确答案是 <b>'+kw+'</b>';
+      }
+    };
+    $('#checkW').onclick=check;
+    ans.addEventListener('keydown',e=>{if(e.key==='Enter')check();});
+    $('#skipW').onclick=()=>{if(writingIdx<list.length-1){writingIdx++;render();}else{toast('已经是最后一句了');}};
+    setTimeout(()=>ans.focus(),300);
+  }
+
+  // 课程自测
+  const opts=$('#opts');
+  if(opts&&['ai','fitness','finance'].includes(route)){
+    const k=route==='ai'?'ai':route==='fitness'?'fit':'fin';
+    const L=lessonFor(k);
+    opts.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      const i=+b.dataset.o;
+      opts.querySelectorAll('.opt').forEach(x=>x.classList.remove('ok','no'));
+      if(i===L.q.a){
+        b.classList.add('ok');$('#hint').innerHTML='<span class="res-ok">答对了 ✓</span> 「'+L.sum+'」';
+        const d=D();if(k==='ai'){d.aiDone=true;d.aiOk=(d.aiOk||0)+1;}else if(k==='fit'){d.fitDone=true;d.fitOk=(d.fitOk||0)+1;}else{d.finDone=true;d.finOk=(d.finOk||0)+1;}
+        save();toast('本节已完成，计入打卡');render();
+      }else{
+        b.classList.add('no');opts.querySelectorAll('.opt')[L.q.a].classList.add('ok');
+        $('#hint').innerHTML='<span class="res-bad">再想想</span> 正确答案是 '+String.fromCharCode(65+L.q.a);
+      }
+    });
+  }
+
+  // 我的
+  if(route==='me'){
+    const nr=$('#nightRow');if(nr)nr.onclick=()=>{S.night=!S.night;save();body_night();render();};
+    const nk=$('#nickRow');if(nk)nk.onclick=()=>{const v=prompt('输入你的昵称',S.nick);if(v&&v.trim()){S.nick=v.trim().slice(0,10);save();render();}};
+    const rr=$('#resetRow');if(rr)rr.onclick=()=>{if(confirm('确认清空所有学习数据？此操作不可恢复')){localStorage.removeItem(KEY);S=load();body_night();render();toast('已重置');}};
+  }
+  topBar();
+}
+</script>
+<script>DAILY_WORDS.push(
+/* 第 1 组 · 数字与时间 */
+["one","/wʌn/","num. 一（数量 1）","I have one book.","我有一本书。"],
+["two","/tuː/","num. 二（数量 2）","She has two cats.","她有两只猫。"],
+["three","/θriː/","num. 三（数量 3）","There are three eggs.","这里有三个鸡蛋。"],
+["four","/fɔːr/","num. 四（数量 4）","I work four days.","我工作四天。"],
+["five","/faɪv/","num. 五（数量 5）","Five people are here.","五个人在这里。"],
+["six","/sɪks/","num. 六（数量 6）","Six o'clock is early.","六点很早。"],
+["seven","/ˈsevn/","num. 七（数量 7）","A week has seven days.","一周有七天。"],
+["eight","/eɪt/","num. 八（数量 8）","He sleeps eight hours.","他睡八小时。"],
+["nine","/naɪn/","num. 九（数量 9）","The shop opens at nine.","店九点开门。"],
+["ten","/ten/","num. 十（数量 10）","Count to ten with me.","跟我一起数到十。"],
+["hundred","/ˈhʌndrəd/","一百","One hundred people came.","来了一百人。"],
+["day","/deɪ/","天；白天","Have a nice day!","祝你今天愉快！"],
+["week","/wiːk/","星期；周","See you next week.","下周见。"],
+["month","/mʌnθ/","月","This month is busy.","这个月很忙。"],
+["year","/jɪr/","年","Happy new year!","新年快乐！"],
+["today","/təˈdeɪ/","今天","Today is my day off.","今天我休息。"],
+["tomorrow","/təˈmɑːroʊ/","明天","I will call you tomorrow.","我明天给你打电话。"],
+["yesterday","/ˈjestərdeɪ/","昨天","Yesterday was cold.","昨天很冷。"],
+["morning","/ˈmɔːrnɪŋ/","早上","I run every morning.","我每天早上跑步。"],
+["night","/naɪt/","夜晚","Good night, sleep well.","晚安，睡个好觉。"],
+/* 第 2 组 · 颜色与形状 */
+["red","/red/","红色（的）","The apple is red.","这个苹果是红色的。"],
+["blue","/bluː/","蓝色（的）","The sky is blue.","天空是蓝色的。"],
+["green","/ɡriːn/","绿色（的）","Green means go.","绿灯表示通行。"],
+["yellow","/ˈjeloʊ/","黄色（的）","She likes yellow flowers.","她喜欢黄色的花。"],
+["black","/blæk/","黑色（的）","He wears a black coat.","他穿一件黑外套。"],
+["white","/waɪt/","白色（的）","White is simple and clean.","白色简单干净。"],
+["orange","/ˈɔːrɪndʒ/","橙色（的）；橙子","Orange is warm.","橙色很温暖。"],
+["pink","/pɪŋk/","粉色（的）","Her bag is pink.","她的包是粉色的。"],
+["brown","/braʊn/","棕色（的）","Brown looks natural.","棕色看起来很自然。"],
+["gray","/ɡreɪ/","灰色（的）","The sky is gray today.","今天天是灰的。"],
+["color","/ˈkʌlər/","颜色","What color do you like?","你喜欢什么颜色？"],
+["light","/laɪt/","浅色的；光","I like light blue.","我喜欢浅蓝色。"],
+["dark","/dɑːrk/","深色的；暗的","This room is too dark.","这房间太暗了。"],
+["circle","/ˈsɜːrkl/","圆形","Draw a circle here.","在这里画一个圆。"],
+["square","/skwer/","正方形","The table is a square.","桌子是正方形。"],
+["line","/laɪn/","线；排","Stand in a line, please.","请排成一队。"],
+["point","/pɔɪnt/","点；要点","This point is important.","这一点很重要。"],
+["shape","/ʃeɪp/","形状","What shape is it?","它是什么形状？"],
+["bright","/braɪt/","明亮的","The lamp is bright.","这盏灯很亮。"],
+["clean","/kliːn/","干净的；打扫","Keep your desk clean.","保持桌面干净。"],
+/* 第 3 组 · 家庭与人物 */
+["family","/ˈfæməli/","家庭；家人","Family is everything.","家人最重要。"],
+["father","/ˈfɑːðər/","父亲","My father cooks well.","我父亲做饭很好。"],
+["mother","/ˈmʌðər/","母亲","My mother is a teacher.","我母亲是老师。"],
+["son","/sʌn/","儿子","Their son is five.","他们的儿子五岁。"],
+["daughter","/ˈdɔːtər/","女儿","My daughter likes books.","我女儿喜欢书。"],
+["brother","/ˈbrʌðər/","兄弟","My brother works here.","我哥哥在这里工作。"],
+["sister","/ˈsɪstər/","姐妹","My sister is older.","我姐姐年纪更大。"],
+["grandfather","/ˈɡrænfɑːðər/","祖父；外公","My grandfather is retired.","我爷爷退休了。"],
+["grandmother","/ˈɡrænmʌðər/","祖母；外婆","Grandmother makes soup.","外婆做汤。"],
+["uncle","/ˈʌŋkl/","叔叔；舅舅","My uncle lives nearby.","我叔叔住得很近。"],
+["aunt","/ænt/","姑姑；姨","My aunt is kind.","我姑姑很善良。"],
+["cousin","/ˈkʌzn/","表（堂）兄弟姐妹","My cousin studies abroad.","我表弟在国外读书。"],
+["baby","/ˈbeɪbi/","婴儿","The baby is sleeping.","宝宝在睡觉。"],
+["child","/tʃaɪld/","孩子","Every child needs love.","每个孩子都需要爱。"],
+["man","/mæn/","男人","That man is a doctor.","那个男人是医生。"],
+["woman","/ˈwʊmən/","女人","The woman is waiting.","那位女士在等。"],
+["friend","/frend/","朋友","He is my best friend.","他是我最好的朋友。"],
+["people","/ˈpiːpl/","人们","Many people use phones.","很多人用手机。"],
+["name","/neɪm/","名字","What is your name?","你叫什么名字？"],
+["home","/hoʊm/","家","I am going home.","我要回家了。"],
+/* 第 4 组 · 食物与饮料 */
+["water","/ˈwɔːtər/","水","Drink more water.","多喝水。"],
+["rice","/raɪs/","米饭","I eat rice every day.","我每天吃米饭。"],
+["bread","/bred/","面包","Buy some bread, please.","请买些面包。"],
+["milk","/mɪlk/","牛奶","A glass of milk, please.","请给我一杯牛奶。"],
+["egg","/eɡ/","鸡蛋","Two eggs for breakfast.","早餐两个鸡蛋。"],
+["meat","/miːt/","肉","He does not eat meat.","他不吃肉。"],
+["fish","/fɪʃ/","鱼","This fish is fresh.","这条鱼很新鲜。"],
+["vegetable","/ˈvedʒtəbl/","蔬菜","Eat more vegetables.","多吃蔬菜。"],
+["fruit","/fruːt/","水果","Fruit is good for you.","水果对你有好处。"],
+["apple","/ˈæpl/","苹果","I eat an apple a day.","我每天吃一个苹果。"],
+["banana","/bəˈnænə/","香蕉","Bananas are cheap here.","这里香蕉很便宜。"],
+["tea","/tiː/","茶","Do you want some tea?","你想喝点茶吗？"],
+["coffee","/ˈkɔːfi/","咖啡","One coffee, no sugar.","一杯咖啡，不加糖。"],
+["sugar","/ˈʃʊɡər/","糖","Too much sugar is bad.","糖太多不好。"],
+["salt","/sɔːlt/","盐","Add a little salt.","加一点盐。"],
+["oil","/ɔɪl/","油","Use less oil when cooking.","做饭少放油。"],
+["soup","/suːp/","汤","The soup is hot.","汤很烫。"],
+["breakfast","/ˈbrekfəst/","早餐","Breakfast starts the day.","早餐开启一天。"],
+["dinner","/ˈdɪnər/","晚餐","We have dinner at seven.","我们七点吃晚饭。"],
+["meal","/miːl/","一餐；饭","This is a healthy meal.","这是一顿健康的饭。"],
+/* 第 5 组 · 身体与健康 */
+["body","/ˈbɑːdi/","身体","Sleep helps your body.","睡眠对身体有好处。"],
+["head","/hed/","头","My head hurts a little.","我头有点疼。"],
+["face","/feɪs/","脸","Wash your face first.","先洗脸。"],
+["eye","/aɪ/","眼睛","Close your eyes and rest.","闭上眼睛休息。"],
+["ear","/ɪr/","耳朵","My left ear is itchy.","我左耳有点痒。"],
+["nose","/noʊz/","鼻子","Breathe through your nose.","用鼻子呼吸。"],
+["mouth","/maʊθ/","嘴","Open your mouth, please.","请张开嘴。"],
+["tooth","/tuːθ/","牙齿","Brush your teeth twice.","每天刷两次牙。"],
+["hair","/her/","头发","His hair is short.","他头发很短。"],
+["hand","/hænd/","手","Wash your hands often.","勤洗手。"],
+["arm","/ɑːrm/","手臂","My arm is strong.","我的手臂很有力。"],
+["leg","/leɡ/","腿","Run with your legs.","用腿跑起来。"],
+["foot","/fʊt/","脚","My foot is cold.","我的脚很冷。"],
+["heart","/hɑːrt/","心脏","Walking is good for the heart.","走路对心脏好。"],
+["back","/bæk/","背部；后面","Sit up and protect your back.","坐直，保护你的背。"],
+["skin","/skɪn/","皮肤","Use sun cream on your skin.","在皮肤上涂防晒。"],
+["finger","/ˈfɪŋɡər/","手指","Point with your finger.","用手指一指。"],
+["neck","/nek/","脖子","My neck is stiff.","我的脖子很僵。"],
+["shoulder","/ˈʃoʊldər/","肩膀","Relax your shoulders.","放松你的肩膀。"],
+["blood","/blʌd/","血","Blood carries oxygen.","血液输送氧气。"],
+/* 第 6 组 · 家居与物品 */
+["house","/haʊs/","房子","Their house is big.","他们的房子很大。"],
+["room","/ruːm/","房间","This room is quiet.","这个房间很安静。"],
+["door","/dɔːr/","门","Please close the door.","请关上门。"],
+["window","/ˈwɪndoʊ/","窗户","Open the window for air.","开窗通风。"],
+["bed","/bed/","床","I go to bed at eleven.","我十一点上床。"],
+["table","/ˈteɪbl/","桌子","Put it on the table.","放在桌子上。"],
+["chair","/tʃer/","椅子","Sit on the chair.","坐在椅子上。"],
+["lamp","/læmp/","台灯","Turn on the lamp.","打开台灯。"],
+["key","/kiː/","钥匙","I lost my key.","我钥匙丢了。"],
+["bag","/bæɡ/","包","My bag is heavy.","我的包很重。"],
+["book","/bʊk/","书","This book is useful.","这本书很有用。"],
+["pen","/pen/","笔","Can I use your pen?","我能用你的笔吗？"],
+["phone","/foʊn/","手机；电话","My phone is charging.","我手机在充电。"],
+["computer","/kəmˈpjuːtər/","电脑","I use a computer at work.","我工作用电脑。"],
+["clock","/klɑːk/","时钟","The clock is on the wall.","钟在墙上。"],
+["cup","/kʌp/","杯子","Fill the cup with water.","把杯子装满水。"],
+["box","/bɑːks/","盒子","Put the books in the box.","把书放进盒子。"],
+["mirror","/ˈmɪrər/","镜子","Look in the mirror.","照照镜子。"],
+["towel","/ˈtaʊəl/","毛巾","Use a clean towel.","用干净的毛巾。"],
+["floor","/flɔːr/","地板；楼层","Do not sit on the floor.","别坐在地上。"],
+/* 第 7 组 · 常用动词 */
+["go","/ɡoʊ/","去","I go to work by bus.","我坐公交去上班。"],
+["come","/kʌm/","来","Come here, please.","请过来。"],
+["eat","/iːt/","吃","Let us eat together.","我们一起吃吧。"],
+["drink","/drɪŋk/","喝","Drink water, not cola.","喝水，别喝可乐。"],
+["sleep","/sliːp/","睡觉","I sleep eight hours.","我睡八小时。"],
+["walk","/wɔːk/","走；步行","I walk after dinner.","我晚饭后散步。"],
+["run","/rʌn/","跑","He runs every morning.","他每天早上跑步。"],
+["sit","/sɪt/","坐","Sit down and relax.","坐下放松一下。"],
+["stand","/stænd/","站","Stand up slowly.","慢慢站起来。"],
+["open","/ˈoʊpən/","打开","Open your book.","打开你的书。"],
+["close","/kloʊz/","关上","Close the window, please.","请关窗。"],
+["look","/lʊk/","看","Look at this picture.","看这张图片。"],
+["listen","/ˈlɪsn/","听","Listen to the audio.","听这段音频。"],
+["speak","/spiːk/","说","Speak slowly, please.","请说慢一点。"],
+["read","/riːd/","读","Read ten minutes a day.","每天读十分钟。"],
+["write","/raɪt/","写","Write your name here.","在这里写你的名字。"],
+["buy","/baɪ/","买","I want to buy a bike.","我想买辆自行车。"],
+["work","/wɜːrk/","工作","I work from home.","我在家工作。"],
+["learn","/lɜːrn/","学习","Learn one word a day.","每天学一个词。"],
+["help","/help/","帮助","Can you help me?","你能帮我吗？"],
+/* 第 8 组 · 形容词 */
+["good","/ɡʊd/","好的","This is a good idea.","这是个好主意。"],
+["bad","/bæd/","坏的；糟糕的","Bad habits cost you.","坏习惯会让你付出代价。"],
+["new","/nuː/","新的","I bought a new phone.","我买了个新手机。"],
+["old","/oʊld/","旧的；年长的","This is an old song.","这是一首老歌。"],
+["fast","/fæst/","快的","The train is fast.","这趟火车很快。"],
+["slow","/sloʊ/","慢的","Slow and steady wins.","稳扎稳打才能赢。"],
+["hot","/hɑːt/","热的","The water is too hot.","水太烫了。"],
+["cold","/koʊld/","冷的","It is cold outside.","外面很冷。"],
+["happy","/ˈhæpi/","快乐的","I am happy today.","我今天很开心。"],
+["tired","/ˈtaɪərd/","累的","I feel tired after work.","下班后我很累。"],
+["easy","/ˈiːzi/","容易的","This task is easy.","这个任务很简单。"],
+["hard","/hɑːrd/","困难的；硬的","English is not hard.","英语并不难。"],
+["important","/ɪmˈpɔːrtnt/","重要的","Sleep is important.","睡眠很重要。"],
+["different","/ˈdɪfrənt/","不同的","We have different views.","我们有不同的看法。"],
+["same","/seɪm/","相同的","We take the same bus.","我们坐同一趟车。"],
+["beautiful","/ˈbjuːtɪfl/","美丽的","What a beautiful day!","多美好的一天！"],
+["strong","/strɔːŋ/","强壮的","He is strong and healthy.","他强壮又健康。"],
+["safe","/seɪf/","安全的","Keep your money safe.","把钱放安全的地方。"],
+["busy","/ˈbɪzi/","忙的","I am busy this week.","我这周很忙。"],
+["free","/friː/","空闲的；免费的","Are you free tonight?","你今晚有空吗？"],
+/* 第 9 组 · 交通与地点 */
+["car","/kɑːr/","汽车","My car is small.","我的车很小。"],
+["bus","/bʌs/","公交车","The bus is late.","公交车晚了。"],
+["train","/treɪn/","火车","The train leaves at nine.","火车九点开。"],
+["bike","/baɪk/","自行车","I ride a bike to work.","我骑车上班。"],
+["plane","/pleɪn/","飞机","The plane is on time.","飞机准点。"],
+["subway","/ˈsʌbweɪ/","地铁","Take the subway, it is fast.","坐地铁，很快。"],
+["road","/roʊd/","道路","The road is wet.","路面是湿的。"],
+["street","/striːt/","街道","This street is quiet.","这条街很安静。"],
+["city","/ˈsɪti/","城市","I live in a big city.","我住在大城市。"],
+["station","/ˈsteɪʃn/","车站","Meet me at the station.","在车站等我。"],
+["airport","/ˈerpɔːrt/","机场","The airport is far.","机场很远。"],
+["hospital","/ˈhɑːspɪtl/","医院","Go to the hospital now.","现在去医院。"],
+["school","/skuːl/","学校","The school is near here.","学校就在附近。"],
+["shop","/ʃɑːp/","商店","The shop closes at ten.","商店十点关门。"],
+["bank","/bæŋk/","银行","The bank opens at nine.","银行九点开门。"],
+["park","/pɑːrk/","公园；停车","Let us walk in the park.","我们去公园散步吧。"],
+["office","/ˈɔːfɪs/","办公室","My office is downtown.","我办公室在市中心。"],
+["market","/ˈmɑːrkɪt/","市场","Buy fruit at the market.","在市场买水果。"],
+["map","/mæp/","地图","Check the map first.","先看看地图。"],
+["ticket","/ˈtɪkɪt/","票","I bought two tickets.","我买了两张票。"],
+/* 第 10 组 · 工作与自然 */
+["job","/dʒɑːb/","工作；职位","I like my job.","我喜欢我的工作。"],
+["money","/ˈmʌni/","钱","Save money every month.","每月存点钱。"],
+["time","/taɪm/","时间","Time is limited.","时间有限。"],
+["hour","/ˈaʊər/","小时","I study one hour a day.","我每天学一小时。"],
+["minute","/ˈmɪnɪt/","分钟","Wait a minute, please.","请等一分钟。"],
+["sun","/sʌn/","太阳","The sun is bright.","太阳很亮。"],
+["moon","/muːn/","月亮","The moon is full tonight.","今晚是满月。"],
+["sky","/skaɪ/","天空","Look at the sky.","看看天空。"],
+["rain","/reɪn/","雨；下雨","It will rain tonight.","今晚会下雨。"],
+["snow","/snoʊ/","雪；下雪","Snow covers the road.","雪覆盖了路面。"],
+["wind","/wɪnd/","风","The wind is strong.","风很大。"],
+["cloud","/klaʊd/","云","There is no cloud today.","今天没有云。"],
+["tree","/triː/","树","The tree is very old.","这棵树很老了。"],
+["flower","/ˈflaʊər/","花","The flowers smell good.","花很香。"],
+["river","/ˈrɪvər/","河","The river is clean now.","这条河现在很干净。"],
+["sea","/siː/","海","I want to see the sea.","我想去看海。"],
+["mountain","/ˈmaʊntn/","山","We climbed the mountain.","我们爬了那座山。"],
+["weather","/ˈweðər/","天气","The weather is nice today.","今天天气很好。"],
+["season","/ˈsiːzn/","季节","Autumn is my season.","秋天是我的季节。"],
+["air","/er/","空气","The air is fresh here.","这里空气很新鲜。"]
+);
+AI_WORDS.push(
+/* 第 1 组 · AI 入门词 */
+["AI","/ˌeɪ ˈaɪ/","人工智能","AI is a tool, not magic.","AI 是工具，不是魔法。"],
+["robot","/ˈroʊbɑːt/","机器人","The robot can move boxes.","这个机器人能搬箱子。"],
+["data","/ˈdeɪtə/","数据","AI learns from data.","AI 从数据中学习。"],
+["model","/ˈmɑːdl/","模型","This model is very large.","这个模型很大。"],
+["program","/ˈproʊɡræm/","程序","Write a simple program first.","先写一个简单程序。"],
+["system","/ˈsɪstəm/","系统","The system works well.","系统运行良好。"],
+["network","/ˈnetwɜːrk/","网络","A neural network has layers.","神经网络有多层。"],
+["digital","/ˈdɪdʒɪtl/","数字的","We live in a digital world.","我们生活在数字世界。"],
+["smart","/smɑːrt/","智能的；聪明的","A smart phone learns your habits.","智能手机会学习你的习惯。"],
+["tool","/tuːl/","工具","Use the right tool for the job.","做事情要用对工具。"],
+/* 第 2 组 · 基础术语 */
+["algorithm","/ˈælɡərɪðəm/","算法","The algorithm sorts the list.","这个算法给列表排序。"],
+["input","/ˈɪnpʊt/","输入","Good input gives good output.","好的输入带来好的输出。"],
+["output","/ˈaʊtpʊt/","输出","The output is a short answer.","输出是一个简短答案。"],
+["training","/ˈtreɪnɪŋ/","训练","Training takes a lot of data.","训练需要大量数据。"],
+["test","/test/","测试；检验","Test the model with new data.","用新数据测试模型。"],
+["result","/rɪˈzʌlt/","结果","The result is not stable.","结果不稳定。"],
+["error","/ˈerər/","错误；误差","Small errors add up over time.","小误差会随时间累积。"],
+["process","/ˈprɑːses/","过程；处理","This process takes hours.","这个过程要花几小时。"],
+["function","/ˈfʌŋkʃn/","函数；功能","Each function does one thing.","每个函数只做一件事。"],
+["language","/ˈlæŋɡwɪdʒ/","语言","Language is how we share ideas.","语言是我们分享想法的方式。"],
+/* 第 3 组 · 机器学习 */
+["machine learning","/məˈʃiːn ˈlɜːrnɪŋ/","机器学习","Machine learning finds patterns.","机器学习找规律。"],
+["deep learning","/diːp ˈlɜːrnɪŋ/","深度学习","Deep learning uses many layers.","深度学习使用很多层。"],
+["neural network","/ˈnʊrəl ˈnetwɜːrk/","神经网络","A neural network imitates neurons.","神经网络模仿神经元。"],
+["dataset","/ˈdeɪtəset/","数据集","The dataset has ten thousand rows.","数据集有一万行。"],
+["feature","/ˈfiːtʃər/","特征","Color is an important feature.","颜色是一个重要特征。"],
+["label","/ˈleɪbl/","标签","Every image has a label.","每张图都有标签。"],
+["sample","/ˈsæmpl/","样本","Take a sample of the data.","从数据中取样。"],
+["classify","/ˈklæsɪfaɪ/","分类","Classify emails as spam or not.","把邮件分为垃圾或非垃圾。"],
+["predict","/prɪˈdɪkt/","预测","The model predicts tomorrow's price.","模型预测明天的价格。"],
+["accuracy","/ˈækjərəsi/","准确率","Accuracy reached ninety percent.","准确率达到百分之九十。"],
+/* 第 4 组 · 大模型与对话 */
+["prompt","/prɑːmpt/","提示词","A clear prompt gives better answers.","清晰的提示词给出更好的答案。"],
+["token","/ˈtoʊkən/","词元","A token is a piece of text.","词元是文本的一小段。"],
+["context","/ˈkɑːntekst/","上下文","Long context costs more.","长上下文成本更高。"],
+["generate","/ˈdʒenəreɪt/","生成","It can generate a full article.","它能生成整篇文章。"],
+["chatbot","/ˈtʃætbɑːt/","聊天机器人","The chatbot answers questions.","聊天机器人回答问题。"],
+["assistant","/əˈsɪstənt/","助手","The assistant helps me write.","助手帮我写作。"],
+["response","/rɪˈspɑːns/","回复；响应","The response was too long.","回复太长了。"],
+["instruction","/ɪnˈstrʌkʃn/","指令","Follow the instruction step by step.","按指令一步步来。"],
+["fine-tune","/faɪn tuːn/","微调","Fine-tune the model on your data.","用你的数据微调模型。"],
+["parameter","/pəˈræmɪtər/","参数","The model has billions of parameters.","这个模型有几十亿参数。"],
+/* 第 5 组 · 向量与算力 */
+["embedding","/ɪmˈbedɪŋ/","向量嵌入","Embeddings turn words into numbers.","嵌入把词变成数字。"],
+["vector","/ˈvektər/","向量","A vector has a direction and size.","向量有方向和大小。"],
+["similarity","/ˌsɪməˈlærəti/","相似度","Compute the similarity of two texts.","计算两段文本的相似度。"],
+["cluster","/ˈklʌstər/","聚类","The cluster groups similar items.","聚类把相似项分成一组。"],
+["inference","/ˈɪnfərəns/","推理（运行）","Inference is cheaper than training.","推理比训练便宜。"],
+["GPU","/ˌdʒiː piː ˈjuː/","显卡处理器","A GPU speeds up training.","GPU 加速训练。"],
+["memory","/ˈmeməri/","内存；记忆","The model needs more memory.","这个模型需要更多内存。"],
+["compute","/kəmˈpjuːt/","计算；算力","Compute is expensive now.","现在算力很贵。"],
+["scale","/skeɪl/","规模；扩展","Scale brings new abilities.","规模带来新能力。"],
+["benchmark","/ˈbentʃmɑːrk/","基准测试","This benchmark is widely used.","这个基准被广泛使用。"],
+/* 第 6 组 · 模型结构 */
+["LLM","/ˌel el ˈem/","大语言模型","The LLM writes and translates.","大模型能写作和翻译。"],
+["transformer","/trænsˈfɔːrmər/","变换器架构","The transformer changed everything.","变换器架构改变了一切。"],
+["attention","/əˈtenʃn/","注意力（机制）","Attention links words to context.","注意力把词与上下文联系起来。"],
+["layer","/ˈleɪər/","层","The model has many layers.","模型有很多层。"],
+["weight","/weɪt/","权重","Weights change during training.","权重在训练中改变。"],
+["bias","/ˈbaɪəs/","偏置；偏见","Bias can hurt fairness.","偏见会损害公平。"],
+["gradient","/ˈɡreɪdiənt/","梯度","Gradient points to the best direction.","梯度指向最好的方向。"],
+["optimize","/ˈɑːptɪmaɪz/","优化","Optimize speed and quality together.","同时优化速度和效果。"],
+["loss","/lɔːs/","损失（误差）","Lower loss means better fit.","损失更低意味着拟合更好。"],
+["epoch","/ˈiːpɑːk/","训练轮次","Train for ten epochs.","训练十轮。"],
+/* 第 7 组 · 多模态 */
+["vision","/ˈvɪʒn/","视觉（能力）","Computer vision reads images.","计算机视觉读取图像。"],
+["recognition","/ˌrekəɡˈnɪʃn/","识别","Face recognition is common now.","人脸识别现在很常见。"],
+["speech","/spiːtʃ/","语音；讲话","Speech to text is very fast.","语音转文字非常快。"],
+["translation","/trænsˈleɪʃn/","翻译","Translation quality keeps improving.","翻译质量不断提升。"],
+["detection","/dɪˈtekʃn/","检测","Object detection finds boxes.","目标检测找出框。"],
+["segment","/ˈseɡmənt/","分割；片段","Segment the image into parts.","把图像分割成部分。"],
+["caption","/ˈkæpʃn/","图像描述；字幕","Generate a caption for the photo.","为这张照片生成描述。"],
+["audio","/ˈɔːdioʊ/","音频","The audio is saved as a file.","音频保存为文件。"],
+["video","/ˈvɪdioʊ/","视频","The video is one minute long.","视频一分钟长。"],
+["multimodal","/ˌmʌltiˈmoʊdl/","多模态","Multimodal models see and hear.","多模态模型能看能听。"],
+/* 第 8 组 · 工程与部署 */
+["agent","/ˈeɪdʒənt/","智能体","Agents can use tools alone.","智能体能自己使用工具。"],
+["workflow","/ˈwɜːrkfloʊ/","工作流","Automate this workflow first.","先自动化这个流程。"],
+["automation","/ˌɔːtəˈmeɪʃn/","自动化","Automation saves time, not brains.","自动化省时间，不省脑力。"],
+["API","/ˌeɪ piː ˈaɪ/","应用程序接口","Call the API to get the answer.","调用接口获取答案。"],
+["deploy","/dɪˈplɔɪ/","部署","Deploy the service tonight.","今晚部署服务。"],
+["server","/ˈsɜːrvər/","服务器","The server is under load.","服务器压力很大。"],
+["cloud","/klaʊd/","云；云计算","Run it in the cloud.","在云上运行。"],
+["storage","/ˈstɔːrɪdʒ/","存储","Storage is cheaper than compute.","存储比算力便宜。"],
+["security","/sɪˈkjʊrəti/","安全","Security must come first.","安全必须放在第一位。"],
+["platform","/ˈplætfɔːrm/","平台","This platform supports teams.","这个平台支持团队协作。"],
+/* 第 9 组 · 风险与伦理 */
+["hallucination","/həˌluːsɪˈneɪʃn/","幻觉（编造）","Check facts to avoid hallucination.","核对事实，避免幻觉。"],
+["fairness","/ˈfernəs/","公平性","Fairness is hard to measure.","公平性很难衡量。"],
+["privacy","/ˈpraɪvəsi/","隐私","Never upload private photos.","不要上传私人照片。"],
+["ethic","/ˈeθɪk/","伦理","AI needs clear ethics.","AI 需要清晰的伦理。"],
+["copyright","/ˈkɑːpiraɪt/","版权","Copyright rules still apply.","版权规则依然适用。"],
+["risk","/rɪsk/","风险","Understand the risk first.","先理解风险。"],
+["evaluation","/ɪˌvæljuˈeɪʃn/","评估","Evaluation shows real quality.","评估反映真实质量。"],
+["robust","/roʊˈbʌst/","鲁棒的；稳固的","Robust systems fail less often.","鲁棒的系统少出错。"],
+["alignment","/əˈlaɪnmənt/","对齐","Alignment means acting as intended.","对齐意味着按预期行事。"],
+["reinforcement","/ˌriːɪnˈfɔːrsmənt/","强化","Reinforcement uses rewards.","强化使用奖励。"],
+/* 第 10 组 · 进阶概念 */
+["reward","/rɪˈwɔːrd/","奖励","A good reward shapes behavior.","好的奖励塑造行为。"],
+["policy","/ˈpɑːləsi/","策略","The policy decides the next move.","策略决定下一步。"],
+["explore","/ɪkˈsplɔːr/","探索","Explore first, then exploit.","先探索，再收割。"],
+["retrieval","/rɪˈtriːvl/","检索","Retrieval finds the right document.","检索找到正确的文档。"],
+["knowledge","/ˈnɑːlɪdʒ/","知识","Knowledge must be up to date.","知识必须是最新的。"],
+["reasoning","/ˈriːzənɪŋ/","推理","Reasoning takes many steps.","推理需要很多步骤。"],
+["planning","/ˈplænɪŋ/","规划","Planning splits big tasks.","规划把大任务拆开。"],
+["intelligence","/ɪnˈtelɪdʒəns/","智能","Intelligence is more than speed.","智能不只是速度快。"],
+["framework","/ˈfreɪmwɜːrk/","框架","The framework saves setup time.","框架省去搭建时间。"],
+["future","/ˈfjuːtʃər/","未来","The future is built by learners.","未来由学习者建造。"]
+);
+AI_LESSONS.push(
+/* —— 初级 1-5 —— */
+{t:"AI 到底是什么：先分清「会背」和「会想」",lv:"初级",min:6,
+ pts:["人工智能不是让机器有意识，而是让机器用数据做判断。今天看到的所有 AI，本质都是「从大量例子中找规律」。",
+      "弱 AI：只会做一件事，比如识别图片、翻译、推荐视频。强 AI：能像人一样处理任何任务，目前还不存在。",
+      "机器学习是今天 AI 的核心：不给规则，只给例子，让程序自己总结规律。这和你学英语很像——不是背语法书，而是听多了自然会说。",
+      "判断一个功能是不是 AI，只看一点：它有没有从数据里「学」过。计算器不是 AI，因为它只会按固定公式算。"],
+ sum:"AI = 用数据找规律，替代人做判断，不需要意识。",
+ q:{q:"下面哪个最符合「机器学习」的做法？",o:["工程师写好所有规则，程序照着执行","给程序大量例子，让它自己总结规律","程序随机给出答案，再看运气"],a:1}},
+
+{t:"AI 三要素：数据、算法、算力",lv:"初级",min:6,
+ pts:["数据是燃料。没有高质量数据，再好的算法也学不出东西，就像没有教材就没法学英语。",
+      "算法是方法。它决定「怎么从数据里学」，同样一堆积木，搭法不同结果差别很大。",
+      "算力是马力。训练一个大模型要成千上万张显卡跑几周，普通电脑根本带不动。",
+      "三者缺一不可。数据脏 → 结果偏；算法差 → 学不会；算力少 → 做不大。"],
+ sum:"数据决定上限，算法决定效率，算力决定规模。",
+ q:{q:"如果训练数据本身有大量错误标注，最可能的结果是？",o:["模型学得慢但结果正确","模型学会了错误规律，输出也错","算力会自动纠正数据错误"],a:1}},
+
+{t:"监督学习：最常见的 AI 学习方式",lv:"初级",min:7,
+ pts:["监督学习 = 有标准答案的学习。给模型一万张猫的照片并标注「这是猫」，它就能学会识别猫。",
+      "两个阶段：训练阶段看带答案的题目反复调参；推理阶段拿没见过的题目答题。",
+      "它擅长什么：分类（是/不是）、回归（预测一个数值）、识别（图里有什么）。",
+      "它怕什么：没见过的情况。训练集里只有白猫，第一次见到黑猫就可能认错，这叫分布偏移。"],
+ sum:"有答案 → 监督学习；没答案 → 无监督学习；靠奖励 → 强化学习。",
+ q:{q:"用大量标注好的病历训练一个「是否患病」的判断模型，属于？",o:["监督学习","无监督学习","强化学习"],a:0}},
+
+{t:"训练与推理：一个贵，一个便宜",lv:"初级",min:6,
+ pts:["训练是「上学」，一次投入巨大：要看几万亿字、跑几周、烧掉大量电费。",
+      "推理是「考试」，每次只处理你这一句话，几秒钟就出结果，成本低得多。",
+      "所以模型训练一次，可以被几十亿人反复使用；你每天用 AI，用的其实是别人训练好的成果。",
+      "这也解释了为什么「微调」比「从零训练」便宜得多——你只是在已有知识上补课。"],
+ sum:"训练一次、推理无数次；贵在训练，快在推理。",
+ q:{q:"为什么普通用户使用 AI 成本很低？",o:["因为训练也很便宜","因为模型训练一次后可被反复推理使用","因为推理不需要算力"],a:1}},
+
+{t:"AI 为什么会出错：三个真实原因",lv:"初级",min:7,
+ pts:["数据问题：训练数据有偏见或错误，模型就学会了偏见和错误。",
+      "分布问题：现实世界和训练数据不一样，模型在「没见过的场景」里容易失效。",
+      "目标问题：模型只优化你给它的指标。指标设计错了，它会努力做错的事。",
+      "所以 AI 的输出要当成「初稿」，不要当成「结论」。人在回路（human in the loop）永远是最后一道保险。"],
+ sum:"错不在「机器笨」，多半在数据、场景或目标定义。",
+ q:{q:"模型在实验室表现很好，上线后却频繁出错，最可能的原因是？",o:["模型参数太少","线上数据和训练数据分布不同","用户打字太慢"],a:1}},
+
+/* —— 中级 6-10 —— */
+{t:"神经网络怎么学习：前向、损失、反向传播",lv:"中级",min:9,
+ pts:["前向传播：数据从输入层一路算到输出层，得到一个预测值。",
+      "计算损失：把预测值和正确答案比较，差得越多损失越大。",
+      "反向传播：把误差从输出层往回传，算出每个参数「该负多少责任」。",
+      "梯度下降：沿着让损失变小的方向，微调所有参数，重复几百万次。"],
+ sum:"预测 → 算误差 → 反向追责 → 小步调参，循环到误差足够小。",
+ q:{q:"「反向传播」主要解决什么问题？",o:["把误差分配到各个参数，指导调参","把数据从输入传到输出","压缩模型体积"],a:0}},
+
+{t:"过拟合：背答案的学生",lv:"中级",min:8,
+ pts:["过拟合 = 训练集考 100 分，新题只考 60 分。模型把噪声也背了下来，没有学到通用规律。",
+      "三个信号：训练准确率远高于验证准确率；参数过多；数据太少。",
+      "三个解法：更多数据、正则化（限制参数变大）、早停（在验证集变差前停下）、Dropout（训练时随机丢神经元）。",
+      "判断标准只有一个：在「没见过的数据」上表现如何，而不是在训练集上。"],
+ sum:"训练集高分不算本事，验证集高分才算学会。",
+ q:{q:"下列哪种做法最能缓解过拟合？",o:["增加训练轮次","增加更多高质量数据","把所有参数调大"],a:1}},
+
+{t:"大语言模型如何「说话」：本质是猜下一个词",lv:"中级",min:9,
+ pts:["大模型不是先想好整段话再输出，而是每次预测「下一个最可能的词」，逐个往外吐。",
+      "每个位置它都给所有候选词一个概率，按概率采样。温度高 → 更随机更有创意；温度低 → 更稳定更保守。",
+      "它没有真正的「理解」，但通过海量文本学到了语言中的统计规律，所以看起来很像懂。",
+      "这解释了胡说八道的机制：它优化的是「像不像人话」，不是「对不对」。"],
+ sum:"逐词预测概率 → 采样输出；流畅不等于正确。",
+ q:{q:"把温度（temperature）调低，通常会带来什么变化？",o:["输出更随机更有创意","输出更稳定更保守","模型参数变少"],a:1}},
+
+{t:"提示词工程：把 AI 当聪明但没背景的实习生",lv:"中级",min:8,
+ pts:["原则一：给角色和场景。「你是有十年经验的健身教练，帮我改训练计划」。",
+      "原则二：给任务和格式。说清楚要什么、多长、用什么结构，比说「写好一点」有效十倍。",
+      "原则三：给例子。一个输入输出示例，胜过一大段抽象描述（few-shot）。",
+      "原则四：分步骤、允许说不知道。复杂任务拆成几步；明确「信息不足就提问」，能明显减少编造。"],
+ sum:"角色 + 任务 + 格式 + 例子 + 分步，是提示词的五个抓手。",
+ q:{q:"想让 AI 按固定格式输出周报，最有效的做法是？",o:["多说几遍「认真写」","给出一个周报示例并规定结构","把问题问得更短"],a:1}},
+
+{t:"向量与语义检索：AI 的「找资料」能力",lv:"中级",min:8,
+ pts:["把一段文字变成一串数字（向量/embedding），意思相近的文字在数字空间里距离也近。",
+      "好处：不再靠关键词匹配。你搜「怎么减脂」，也能找到写「降低体脂」的文章。",
+      "RAG（检索增强生成）：先在你的资料库里检索相关片段，再让模型基于这些片段回答，能大幅减少编造。",
+      "这也是为什么「把资料喂给 AI」比「让 AI 凭记忆答」更可靠。"],
+ sum:"文本 → 向量 → 找最近的片段 → 再生成答案，这就是 RAG。",
+ q:{q:"RAG 的核心价值是什么？",o:["让模型参数变多","让回答基于真实资料，减少编造","让模型运行更快"],a:1}},
+
+/* —— 高级 11-15 —— */
+{t:"Transformer 与注意力：为什么它能统治 AI",lv:"高级",min:10,
+ pts:["注意力机制：处理每个词时，同时看句子里所有词，并给它们分配不同权重。",
+      "它解决了老模型的痛点：长句子里前后关系丢失、无法并行计算。",
+      "多头注意力：同时从多个角度关注（语法关系、指代关系、语义关系），再合并。",
+      "代价是复杂度随长度平方增长，所以上下文越长越贵，长文本要配合分块、压缩等技术。"],
+ sum:"注意力 = 动态决定「该看哪」，并行 + 长依赖，是 Transformer 的底座。",
+ q:{q:"注意力机制相比早期循环网络的主要优势是？",o:["可以并行计算并处理长距离依赖","参数一定更少","不需要训练数据"],a:0}},
+
+{t:"微调、RAG、提示词：三条路怎么选",lv:"高级",min:9,
+ pts:["提示词：零成本、当天见效，适合调格式、定风格、加约束。先试这个。",
+      "RAG：需要注入私有知识、要求可溯源时用。更新资料不用重训模型。",
+      "微调：需要改变模型的行为习惯（固定语气、特定任务范式）时才用，成本高、维护重。",
+      "选择顺序：提示词 → RAG → 微调。多数人一上来就想微调，其实前两步已经够用。"],
+ sum:"先改提示词，再补资料，最后才动模型。",
+ q:{q:"公司想让 AI 回答内部制度问题并给出来源，最优方案是？",o:["微调模型","用 RAG 检索内部文档再生成","换一个更大的模型"],a:1}},
+
+{t:"幻觉的成因与抑制",lv:"高级",min:9,
+ pts:["成因一：模型目标是「生成像样的文本」，不是「陈述事实」，无据可依时会补全。",
+      "成因二：长尾知识覆盖不足，训练里没见过的细节它就现编。",
+      "成因三：提示里有诱导性假设，模型顺着你的话往下编（迎合倾向）。",
+      "抑制手段：要求给来源、允许回答「不知道」、用检索约束、让另一个模型复核、关键结论人工核验。"],
+ sum:"幻觉无法根除，只能靠约束 + 检索 + 复核把概率压下去。",
+ q:{q:"下面哪种提示最能降低幻觉？",o:["「你必须给出确定答案」","「如无可靠依据，请说明不确定并给出处」","「尽量写长一点」"],a:1}},
+
+{t:"AI Agent：从会说到会做",lv:"高级",min:10,
+ pts:["Agent = 大模型 + 工具 + 记忆 + 规划。它能调用搜索、代码、接口，分多步完成任务。",
+      "关键循环：观察 → 思考 → 行动 → 再观察，直到目标达成或失败退出。",
+      "最大风险是「连环错误」：第一步理解错了，后面每一步都在放大错误。所以要有校验点和回滚。",
+      "工程上的重点不是让它更聪明，而是让它「可停止、可观测、可追责」——权限边界要清晰。"],
+ sum:"Agent 的价值在闭环执行，风险也在闭环执行，边界与校验比能力更重要。",
+ q:{q:"部署 Agent 时最需要优先设计的是什么？",o:["权限边界与失败回滚","让它一次做完所有事","提高温度让输出更多样"],a:0}},
+
+{t:"AI 的边界：评估、对齐与伦理",lv:"高级",min:9,
+ pts:["评估：不要只看一个榜单。要按场景自建测试集，看准确率、稳定性、成本、拒答率。",
+      "对齐：让模型的行为符合人类意图与价值观，包括无害性、有用性、诚实性三条底线。",
+      "伦理与合规：隐私数据不上传、生成内容标注来源、版权与商用授权要确认。",
+      "清醒的认知：AI 放大的是你的判断力，也放大你的错误。用它做初稿和陪练，不要用它替代判断。"],
+ sum:"能被评估的才可控，能被约束的才可用。",
+ q:{q:"评估一个 AI 工具是否适合你的工作，最可靠的做法是？",o:["看排行榜第一","用自己场景的真实任务做小测试集","看宣传视频效果"],a:1}}
+);
+FIT_LESSONS.push(
+/* —— 初级 —— */
+{t:"肌肉到底是怎么变大的：超量恢复",lv:"初级",min:7,
+ pts:["训练只是「发出信号」，不是「长肌肉」。你在训练里制造微小的肌纤维损伤和机械张力。",
+      "真正的增长发生在恢复期：身体修复时把肌纤维造得比原来更粗一点，这叫超量恢复。",
+      "所以训练频率不是越高越好，睡不好、吃不饱、天天练，反而长不动。",
+      "一个完整的循环 = 刺激 → 恢复 → 适应。缺任何一环，进步都会停。"],
+ sum:"训练给信号，吃饭给材料，睡觉给时间；三者缺一，肌肉不涨。",
+ plan:[["热身","关节活动 + 轻重量 2 组","5 分钟"],["主训练","深蹲或腿举 3 组","12-15 次"],["上肢","俯卧撑或推举 3 组","10-12 次"],["收尾","拉伸 + 慢走","5 分钟"]],
+ q:{q:"肌肉主要在什么时候增长？",o:["训练当中","恢复期（睡眠和饮食）","训练后立刻"],a:1}},
+
+{t:"三大基础动作：深蹲、卧推、硬拉",lv:"初级",min:8,
+ pts:["深蹲：练腿和臀，全身最有效的动作之一。膝盖对准脚尖方向，重心在脚中部，背部保持中立。",
+      "卧推：练胸、肩、三头。肩胛后收下沉，杠铃落在胸下方，手腕不后折。",
+      "硬拉：练后侧链（臀、腿后、背）。核心收紧，靠腿和髋发力起杠，不要用腰去拽。",
+      "新人先把动作做对，重量宁轻不重。一个错误动作练三个月，比不练更糟。"],
+ sum:"深蹲练前侧，硬拉练后侧，卧推练推力；动作标准 > 重量。",
+ plan:[["动态热身","髋、踝、肩激活","6 分钟"],["深蹲","空杆 → 轻重量 3 组","8-12 次"],["卧推","轻重量 3 组","8-10 次"],["硬拉","轻重量 2 组，重在学习动作","5-6 次"],["核心","平板支撑 3 组","30-45 秒"]],
+ q:{q:"做深蹲时，膝盖最应该注意什么？",o:["向内夹紧","对准脚尖方向，不内扣","完全不要超过脚尖"],a:1}},
+
+{t:"训练频率与分化：一周怎么排",lv:"初级",min:7,
+ pts:["新手期（0-6 个月）：全身训练每周 3 次，比如周一/三/五，每次覆盖腿、推、拉。",
+      "进阶后可以分化：推拉腿（Push/Pull/Legs）或上下肢分化，每周 4-6 次。",
+      "同一肌群两次训练之间至少间隔 48 小时，让它完成超量恢复。",
+      "频率比单次强度更重要：每周 3 次 × 中等强度，好过每周 1 次练到吐。"],
+ sum:"新手全身 3 次/周，进阶再分化；同一肌群间隔 48 小时。",
+ plan:[["周一","全身 A：深蹲 + 卧推 + 划船","45 分钟"],["周三","全身 B：硬拉 + 推举 + 下拉","45 分钟"],["周五","全身 C：腿举 + 俯卧撑 + 核心","40 分钟"],["其余","散步、拉伸、睡够","—"]],
+ q:{q:"同一肌群的两次力量训练之间，建议至少间隔多久？",o:["12 小时","48 小时","7 天"],a:1}},
+
+{t:"组数、次数、重量：看懂 RM",lv:"初级",min:8,
+ pts:["RM（最大重复次数）：10RM 就是「这个重量你最多能做 10 次」。它比公斤数更能描述强度。",
+      "增肌主力区间：6-12 次 × 3-4 组，组间休息 60-90 秒。",
+      "力量区间：1-5 次 × 3-5 组，休息 2-3 分钟，重量大、次数少。",
+      "耐力区间：15-20 次以上，适合新手打基础、也适合减脂期。"],
+ sum:"6-12 次做增肌，1-5 次练力量，15 次以上练耐力。",
+ plan:[["选择重量","能标准完成 10 次的重量","—"],["正式组","4 组 × 8-12 次","组间 90 秒"],["最后一组","接近力竭但动作不变形","—"],["记录","记下重量和次数","每次"]],
+ q:{q:"「10RM」指的是？",o:["做 10 组的重量","最多只能标准完成 10 次的重量","10 公斤"],a:1}},
+
+{t:"有氧和力量怎么安排",lv:"初级",min:6,
+ pts:["目标增肌：力量为主，有氧每周 2-3 次、每次 20-30 分钟中低强度，别放在力量训练前。",
+      "目标减脂：力量不能丢，否则减的是肌肉；有氧作为增加消耗的手段，饮食才是主战场。",
+      "同一天训练，先力量后有氧，效果更好；间隔 6 小时以上更理想。",
+      "快走、爬楼、骑车都算有氧；心率控制在最大心率（约 220-年龄）的 60%-70%。"],
+ sum:"先力量后有氧；减脂靠饮食，有氧只是加速器。",
+ plan:[["力量日","20 分钟快走","训练后"],["非力量日","30-40 分钟快走或骑行","单独"],["日常","少坐，多走 8000 步","累计"]],
+ q:{q:"同一天既做力量又做有氧，合理顺序是？",o:["先有氧再力量","先力量再有氧","随意，没区别"],a:1}},
+
+/* —— 中级 —— */
+{t:"渐进超负荷：唯一有效的进步原则",lv:"中级",min:8,
+ pts:["身体只对「比上次更强一点的刺激」作出适应。所以每周都要有一点点进步。",
+      "四种加负荷方式：加重量、加次数、加组数、缩短组间休息。新手优先加重量或次数。",
+      "推荐节奏：同重量做满上限次数 → 下次加 2.5%-5% 重量 → 次数回落 → 再爬上去。",
+      "别每周都拼命加。进步是台阶式，卡住 2-3 周属于正常，这时该看睡眠和饮食。"],
+ sum:"每周进步一点点：先加次数，再加重量，别一次跳两级。",
+ plan:[["记录","每次记重量/次数/组数","—"],["加量","上肢 +2.5kg，下肢 +5kg","每 1-2 周"],["卡住","连续 3 次失败 → 减量 10% 重来","—"]],
+ q:{q:"下列哪一项不属于渐进超负荷？",o:["增加重量","增加组数","每天换不同动作打乱计划"],a:2}},
+
+{t:"动作标准：比重量重要十倍",lv:"中级",min:9,
+ pts:["深蹲要点：脚掌三点着地、膝盖跟脚尖同向、髋膝同时启动、躯干角度稳定、全程核心收紧。",
+      "卧推要点：肩胛后收下沉、脚踩实、杠铃路径略呈弧线、下放触胸不弹起。",
+      "硬拉要点：杠贴小腿、背保持中立、先蹬地再伸髋、杠铃直线上升、下放控制。",
+      "判断标准很简单：全程能保持呼吸、动作不抖、目标肌肉有灼烧感而不是关节疼。"],
+ sum:"关节不疼、路径稳定、目标肌发力，才算动作对了。",
+ plan:[["录像自查","侧面拍一组动作","每周 1 次"],["降重打磨","用 60% 重量做 3 组","每次"],["疼痛即停","关节刺痛立刻停止","—"]],
+ q:{q:"训练中出现关节刺痛，正确做法是？",o:["忍一下继续做完","立刻停止，检查动作或降重量","换更重的重量压过去"],a:1}},
+
+{t:"吃出肌肉：热量与蛋白质",lv:"中级",min:9,
+ pts:["增肌需要轻微热量盈余：每天比消耗多 200-300 千卡，多了就是长脂肪。",
+      "蛋白质：每公斤体重 1.6-2.0 克/天。70 公斤的人约 110-140 克，分 3-4 餐摄入。",
+      "碳水不是敌人，它是训练燃料。训练前后要有碳水，否则力量上不去。",
+      "脂肪不低于总热量 20%，它参与激素合成，长期过低会影响恢复和状态。"],
+ sum:"热量小盈余 + 蛋白 1.6-2g/kg + 碳水供能，是增肌的三条线。",
+ plan:[["早餐","鸡蛋 + 牛奶 + 主食","蛋白 25-30g"],["训练后","蛋白粉或鸡胸 + 米饭/香蕉","30 分钟内"],["晚餐","瘦肉 + 蔬菜 + 主食","蛋白 30g+"]],
+ q:{q:"一个 70 公斤的增肌者，每天蛋白质建议约为？",o:["50-70 克","110-140 克","250 克以上"],a:1}},
+
+{t:"恢复：睡眠、休息日与延迟性酸痛",lv:"中级",min:7,
+ pts:["睡眠是最强的恢复手段，7-9 小时。睡不够时，训练表现和增肌效率都会明显下降。",
+      "DOMS（延迟性肌肉酸痛）通常在训练后 24-72 小时出现，属于正常现象，不是练废了。",
+      "酸痛时可以做低强度活动（走路、轻重量），促进血流，比完全躺平恢复更快。",
+      "连续疲劳、心率偏高、不想训练、力量下降 → 可能是过度训练，需要减量周。"],
+ sum:"睡够 7-9 小时 + 每周 1-2 天休息，比多练一组更有价值。",
+ plan:[["睡眠","固定入睡时间","7-9 小时"],["休息日","每周 1-2 天不训练","—"],["酸痛期","散步 + 拉伸","20 分钟"]],
+ q:{q:"训练后第二天的肌肉酸痛（DOMS）说明？",o:["肌肉受伤了，必须停练一个月","正常的适应反应，可做低强度活动","训练完全无效"],a:1}},
+
+{t:"五个最常见的训练错误",lv:"中级",min:8,
+ pts:["半程动作：行程不完整，刺激不足还自以为重量大。解决：降重量做全程。",
+      "借力甩动：用惯性代替肌肉发力，目标肌几乎没参与。解决：放慢离心 2-3 秒。",
+      "憋气硬顶：血压瞬间升高，容易头晕。解决：发力时呼气，下放时吸气。",
+      "只练「镜子肌」：胸、手臂练很多，背、腿、核心很弱，长期导致体态问题和受伤。",
+      "忽略热身与灵活度：冷启动直接上重量，是最常见的受伤原因。"],
+ sum:"全程、控制、呼吸、均衡、热身——五个词解决大部分问题。",
+ plan:[["离心控制","下放 2-3 秒","每组"],["呼吸","发力呼气","全程"],["均衡","推拉比 1:1","每周"]],
+ q:{q:"「半程动作」最大的问题是？",o:["刺激不足却误以为强度够","会让肌肉变短","不影响效果"],a:0}},
+
+/* —— 高级 —— */
+{t:"周期化训练：把进步排进日历",lv:"高级",min:9,
+ pts:["线性周期：重量逐步上升、次数逐步下降，适合新手和力量项目。",
+      "波动周期：同一周内安排不同强度（重/中/轻），适合有一定基础、恢复能力较好的人。",
+      "块状周期：4-6 周一个主题（积累 → 强化 → 峰值 → 减量），适合备赛或有明确目标的人。",
+      "核心逻辑一致：强度与容量不能同时拉满，必须有起伏，否则一定崩。"],
+ sum:"强度上去了容量就得降；训练要有节奏，而不是天天拼命。",
+ plan:[["积累期","容量高、强度中","3-4 周"],["强化期","强度高、容量降","2-3 周"],["减量期","容量降 40%","1 周"]],
+ q:{q:"周期化训练的核心原则是？",o:["强度和容量同时拉到最高","强度与容量交替起伏","永远用同一个重量"],a:1}},
+
+{t:"RPE 与自感用力：学会自我调节",lv:"高级",min:8,
+ pts:["RPE（自感用力）10 分制：RPE 8 表示「还能再做 2 次」，RPE 9 表示「还能再做 1 次」，RPE 10 是极限。",
+      "增肌训练多数组落在 RPE 7-9；力量训练主项常在 RPE 7-8，留出余量保护动作。",
+      "它的价值：同一天状态会波动，按「感觉 + 记录」调整，比死守计划更安全。",
+      "新手先别用 RPE，先学会用固定重量和次数建立基准。"],
+ sum:"RPE 让你按当天状态调重量，是长期训练者的必备尺子。",
+ plan:[["主项","RPE 7-8，留 2-3 次余量","—"],["辅助项","RPE 8-9","—"],["状态差","整体降 10% 重量","当天"]],
+ q:{q:"RPE 8 大约意味着？",o:["已经完全做不动","还能再做约 2 次","只用了 8% 的力气"],a:1}},
+
+{t:"减脂期如何保住肌肉",lv:"高级",min:8,
+ pts:["热量缺口不要太大：每天 300-500 千卡，缺口过大会同时掉肌肉和代谢。",
+      "蛋白质要更高：减脂期每公斤体重 1.8-2.2 克，保护肌肉的关键。",
+      "力量训练强度不能降：重量尽量维持，容量可减，让身体知道「肌肉还有用」。",
+      "每周减重 0.5%-1% 体重是安全区间；掉太快，多半是水和肌肉。"],
+ sum:"小缺口 + 高蛋白 + 保持强度，减脂才不掉肌肉。",
+ plan:[["缺口","300-500 千卡/天","—"],["蛋白","1.8-2.2g/kg","分 3-4 餐"],["监测","每周同一时间称重","至少 2 周看趋势"]],
+ q:{q:"减脂期保护肌肉最关键的一项是？",o:["完全停掉力量训练","维持力量训练强度 + 高蛋白","只做有氧"],a:1}},
+
+{t:"久坐人群的预防性训练",lv:"高级",min:9,
+ pts:["久坐典型问题：髋屈肌紧、臀肌弱、胸椎僵硬、肩前伸（圆肩）、颈前倾。",
+      "解决思路不是「多拉伸」，而是「松紧 + 强化弱侧」：髋屈肌拉伸，臀肌和背部强化。",
+      "每天 8 分钟最小方案：胸椎旋转、髋屈肌拉伸、臀桥、面拉或弹力带划船、靠墙天使。",
+      "训练里把「拉」的量做到「推」的 1.5-2 倍，能有效改善圆肩和肩颈不适。"],
+ sum:"久坐的解药是「拉够 + 练臀背」，不只是拉伸。",
+ plan:[["胸椎旋转","每侧 8 次","1 组"],["髋屈肌拉伸","每侧 30 秒","2 组"],["臀桥","15 次","3 组"],["弹力带划船","15 次","3 组"],["靠墙天使","10 次","2 组"]],
+ q:{q:"改善圆肩最有效的训练思路是？",o:["只拉伸胸部","强化背部并增加拉类训练量","完全停止推类动作"],a:1}},
+
+{t:"瓶颈突破：长期训练者的进阶",lv:"高级",min:9,
+ pts:["先排除非训练因素：睡眠、热量、蛋白质、压力。80% 的「平台期」其实卡在这里。",
+      "训练变量轮换：改变次数区间、节奏（慢离心）、动作选择、组间休息，给身体新刺激。",
+      "增加专项弱项训练：卧推卡住 → 练三头、上背和停顿卧推；深蹲卡住 → 练核心与髋稳定。",
+      "定期减量：每 6-8 周安排一周低容量，让疲劳清空，往往减量后就能突破。"],
+ sum:"先查恢复，再换刺激，最后才是加重量。",
+ plan:[["诊断","连续 2 周记录睡眠/饮食/训练","—"],["减量周","容量降 40-50%","每 6-8 周"],["变量","每 4-6 周换一个训练变量","一次只换一个"]],
+ q:{q:"遇到训练平台期，第一步应该做什么？",o:["马上加大重量","先检查睡眠、饮食和恢复","换一整套训练计划"],a:1}}
+);
+FIN_LESSONS.push(
+/* —— 初级 —— */
+{t:"钱的起点：收入、支出、结余",lv:"初级",min:6,
+ pts:["个人财务只有一个公式：收入 - 支出 = 结余。所有理财动作都从抬高结余开始。",
+      "提高结余只有两条路：多赚（提升技能、换赛道）和少花（砍掉不产生价值的支出）。",
+      "记账的意义不是记流水，而是看清「哪些支出我根本不记得花过」，那里藏着最大的空间。",
+      "第一个目标：让结余稳定为正，并且能覆盖 3 个月生活费。"],
+ sum:"结余 = 收入 - 支出；先让结余为正，再谈投资。",
+ q:{q:"个人财务最基础的正确公式是？",o:["支出 = 收入 + 结余","结余 = 收入 - 支出","收入 = 结余 - 支出"],a:1}},
+
+{t:"复利：最重要的一个金融概念",lv:"初级",min:7,
+ pts:["复利 = 利息也产生利息。本金 10 万、年化 8%，30 年后约 100 万（72 法则：72 ÷ 年化 = 翻倍年数）。",
+      "复利有三个变量：本金、收益率、时间。时间是最难补的，所以「早开始」比「投得多」更关键。",
+      "反向复利同样成立：信用卡分期、高息借款的利息也在滚，它是你财富的最大敌人。",
+      "结论：能长期拿住的钱才会产生复利，频繁进出反而毁掉它。"],
+ sum:"复利靠时间，不靠聪明；先清掉高息负债，再谈投资。",
+ q:{q:"按 72 法则，年化 8% 的资金大约多少年翻一倍？",o:["约 9 年","约 18 年","约 30 年"],a:0}},
+
+{t:"通胀：你钱包的隐形税",lv:"初级",min:6,
+ pts:["通胀 = 同样的钱买到的东西变少。长期温和通胀让「放着的现金」持续贬值。",
+      "所以「不投资」本身也是一种风险：看起来安全，实际购买力在缩水。",
+      "对抗通胀的核心是持有能产生现金流的资产（股权、房产、优质债权），而不是现金。",
+      "判断通胀看 CPI（居民消费价格指数），但你的真实体感取决于你的消费结构。"],
+ sum:"现金长期一定贬值；跑赢通胀要靠资产，不是靠省。",
+ q:{q:"长期把大量现金放在活期账户，最大的隐性风险是？",o:["被通胀侵蚀购买力","账户被盗","银行倒闭"],a:0}},
+
+{t:"先有应急金，再谈投资",lv:"初级",min:7,
+ pts:["应急金 = 3-6 个月的必要开支，用于失业、生病、突发支出，避免你被迫在最低点卖出投资。",
+      "它的位置是活期、货币基金这类「随时能取、波动极小」的地方，不追求收益。",
+      "顺序：先还高息负债 → 建应急金 → 再配置投资。顺序错了，风险会集中爆发。",
+      "应急金不是越多越好：超过 12 个月的开支躺在低息账户里，也是一种浪费。"],
+ sum:"应急金买的是「不被迫卖出」的权利，这是投资的前置条件。",
+ q:{q:"应急金最合适的规模是？",o:["1 个月开支","3-6 个月必要开支","3 年开支"],a:1}},
+
+{t:"风险与收益：没有免费的午餐",lv:"初级",min:6,
+ pts:["高收益必然伴随高风险，任何「稳赚不赔、年化 20%」的承诺，本质上是在骗你。",
+      "风险不是一个数字，而是「你可能承受的最坏结果」：能亏多少、亏多久、能不能等。",
+      "承担风险的能力 ≠ 承担风险的意愿。年轻、收入稳定、无负债，能力更强。",
+      "评估一个产品，先问三个问题：钱投给谁？靠什么赚钱？最坏情况是什么？"],
+ sum:"先问「最坏会怎样」，再问「能赚多少」。",
+ q:{q:"看到「保本、年化 20%、名额有限」，最合理的判断是？",o:["机会难得，赶紧上车","典型的高风险诱导话术，需要警惕","先投一小笔试试"],a:1}},
+
+/* —— 中级 —— */
+{t:"资产与负债：给自己的财务拍张 X 光",lv:"中级",min:8,
+ pts:["资产 = 能把钱放进你口袋的东西（存款、基金、房产、能产生收入的技能）。",
+      "负债 = 持续把钱从你口袋掏走的东西（消费贷、车贷、长期不产生现金流的房子）。",
+      "资产负债表：左边列出所有资产与市值，右边列出所有负债与利率，净资产 = 资产 - 负债。",
+      "关键指标是「负债成本 vs 资产回报」：借 8% 的钱去买 3% 的资产，只会越还越穷。"],
+ sum:"看净资产，不看月薪；先确保负债成本低于资产回报。",
+ q:{q:"下列哪一项更接近「资产」的定义？",o:["每月还款的车贷","持续产生租金收入的房子","闲置不用的奢侈品"],a:1}},
+
+{t:"指数基金与分散投资",lv:"中级",min:8,
+ pts:["指数基金跟踪一篮子标的（如沪深 300、标普 500），一次性持有很多公司，天然分散。",
+      "分散的意义：你不需要猜中哪家公司赢，只要分享整体经济增长。",
+      "费率是长期收益的隐形杀手：年费率 1.5% vs 0.2%，30 年差距可能是本金的四分之一。",
+      "定投的作用不是提高收益，而是降低「买在高点」的择时风险，让人能坚持。"],
+ sum:"指数基金 = 低成本 + 分散 + 长期；定投解决的是心态问题。",
+ q:{q:"指数基金相对单只股票的最大优势是？",o:["一定涨得更多","天然分散，降低个股风险","完全没有波动"],a:1}},
+
+{t:"利率、贷款与负债成本",lv:"中级",min:8,
+ pts:["利率是资金的价格。名义利率减去通胀是实际利率，它才决定你真实的负担。",
+      "等额本息（每月还款固定，前期利息多）vs 等额本金（本金还得快，总利息少）。",
+      "提前还款要算「剩余利息节省 vs 违约金 + 这笔钱的其它用途收益」。",
+      "高息负债（信用卡、消费贷）优先级永远高于投资：还掉 18% 的债，等于稳赚 18%。"],
+ sum:"先还利率高于你投资回报的债，这是最稳的「投资」。",
+ q:{q:"如果信用卡分期实际年化约 15%，而你投资长期预期 6%，理性选择是？",o:["先投资，慢慢还债","优先还清分期","两者同时进行"],a:1}},
+
+{t:"保险的本质：买走你不愿意承担的风险",lv:"中级",min:7,
+ pts:["保险不是理财，是转移「低频高损」风险：重疾、意外、身故，一次就可能击穿家庭财务。",
+      "优先级：社保 → 百万医疗 → 意外险 → 重疾险 → 定期寿险（有家庭责任时）。",
+      "买保障型，别买「又保又理财」的复杂产品：责任不清、费率偏高、退保损失大。",
+      "保额比保费重要：医疗险看免赔额与报销范围，寿险保额应覆盖 5-10 年家庭开支。"],
+ sum:"保险买的是「不会因一次意外归零」，不是收益。",
+ q:{q:"保险最核心的功能是？",o:["稳定增值","转移低频高损的风险","替代储蓄"],a:1}},
+
+{t:"费率：吃掉长期收益的隐形税",lv:"中级",min:7,
+ pts:["基金有三层费用：申购/赎回费、管理费、托管费，还有隐性成本（换手带来的冲击成本）。",
+      "「1% 看起来不多」：10 万本金、年化 8%、30 年，费率差 1% 会让终值差出 20% 以上。",
+      "看费率要看「综合成本」：主动基金换手率高，交易成本可能比管理费更贵。",
+      "行动建议：优先低成本指数工具；把「每年省下 0.5%」当作确定性收益。"],
+ sum:"费率是确定要付的，收益是不确定的；先把确定的成本压到最低。",
+ q:{q:"长期投资中，管理费率 1.5% 与 0.2% 的差异影响有多大？",o:["几乎没影响","长期复利下会显著拉低终值","只影响第一年"],a:1}},
+
+/* —— 高级 —— */
+{t:"经济周期与利率环境",lv:"高级",min:9,
+ pts:["周期四阶段：复苏（增长升、通胀低）、过热（通胀升）、滞胀（增长降、通胀高）、衰退（需求降）。",
+      "利率是周期的方向盘：降息利好资产价格与成长股，加息压制估值、抬升负债成本。",
+      "判断环境看三个指标：CPI、PMI、政策利率方向；不要用单一新闻下结论。",
+      "对个人的意义：加息期少加杠杆、多持有现金与短债；降息期可适度提高权益配置。"],
+ sum:"周期的本质是「增长与通胀的错位」，利率是它的调速器。",
+ q:{q:"央行持续加息的环境下，对个人财务最直接的影响是？",o:["借贷成本上升，杠杆风险变大","存款利率下降","通胀立刻消失"],a:0}},
+
+{t:"资产配置：决定 90% 的长期结果",lv:"高级",min:9,
+ pts:["研究普遍认为，长期组合波动与收益的差异，大部分来自资产配置而非选股择时。",
+      "核心是「相关性」：股与债、国内与海外、实物与金融，相关性低才能互相缓冲。",
+      "简单可执行的框架：按风险承受力定股债比例（如 70/30），每年再平衡一次。",
+      "再平衡的反直觉之处：涨多了卖一点、跌多了买一点，机械执行反而收益更稳。"],
+ sum:"先定比例，再选工具，最后机械再平衡。",
+ q:{q:"资产配置中「分散」最关键的依据是？",o:["资产之间的相关性低","资产数量多","买得便宜"],a:0}},
+
+{t:"估值与安全边际",lv:"高级",min:9,
+ pts:["估值是「你付的价格」与「你得到的价值」之比，常见指标：PE、PB、股息率、现金流折现。",
+      "低 PE 不一定是便宜：可能是盈利即将下滑（周期股陷阱）。要判断盈利的可持续性。",
+      "安全边际 = 用明显低于内在价值的价格买入，为判断失误留出缓冲。",
+      "对普通人的落地方式：不在情绪高点追高、分批建仓、给单一标的设上限（如不超过 10%）。"],
+ sum:"不知道价值多少时，就不要为它付高价；安全边际是给错误留的余地。",
+ q:{q:"「安全边际」的核心含义是？",o:["买入价明显低于估算价值，留出容错空间","买最安全的国债","保证不亏钱"],a:0}},
+
+{t:"行为金融：为什么人总买高卖低",lv:"高级",min:9,
+ pts:["损失厌恶：亏 100 元的痛感大约等于赚 200 元的快乐，导致该止损时死扛、该持有时早卖。",
+      "锚定效应：把买入价当参考，而不是看资产的真实价值，于是被「回本」绑架。",
+      "从众与叙事：上涨时人人看多、下跌时人人看空，情绪在最高点最乐观。",
+      "对策：把决策写成规则（比例、限额、再平衡日），减少临场判断；记录每笔决策的理由，事后复盘。"],
+ sum:"战胜市场很难，战胜自己的情绪相对容易——用规则替代感觉。",
+ q:{q:"「损失厌恶」最典型的错误行为是？",o:["亏损时死扛不止损","盈利时立刻卖出","频繁再平衡"],a:0}},
+
+{t:"个人财务规划的五步法",lv:"高级",min:10,
+ pts:["第一步 清点：列出全部资产、负债、月现金流，算出净资产与结余率。",
+      "第二步 防守：清高息负债、建 3-6 个月应急金、配齐基础保障（医疗+意外）。",
+      "第三步 目标：把「买房、教育、养老」拆成金额 + 时间，不同目标用不同风险等级的工具。",
+      "第四步 配置：按目标期限分配资产，短钱放稳、长钱放权益，每年再平衡。",
+      "第五步 复盘：每季度看一次数据，每年调一次结构；只改结构，不追热点。"],
+ sum:"清点 → 防守 → 定目标 → 做配置 → 定期复盘，五步走完就是一套系统。",
+ q:{q:"个人财务规划中，第二步「防守」最优先做的两件事是？",o:["清高息负债 + 建应急金","买股票 + 买基金","换高薪工作 + 买房"],a:0}}
+);
+/* 每日 10 句日常句子：10 组，共 100 句。[英文, 中文, 填空关键词] */
+var DAILY_SENTENCES=[
+/* 第 1 组 · 最基础 */
+["I am fine.","我很好。","fine"],
+["This is my book.","这是我的书。","book"],
+["I like tea.","我喜欢茶。","tea"],
+["He is my friend.","他是我的朋友。","friend"],
+["We go to work.","我们去上班。","work"],
+["She has two cats.","她有两只猫。","two"],
+["I am at home.","我在家。","home"],
+["It is very hot.","天气很热。","hot"],
+["I want some water.","我想要一些水。","water"],
+["He can swim.","他会游泳。","swim"],
+/* 第 2 组 · 日常动作 */
+["I get up at seven.","我七点起床。","seven"],
+["I eat breakfast at home.","我在家吃早饭。","breakfast"],
+["She reads a book every day.","她每天读一本书。","reads"],
+["We walk to the park.","我们走路去公园。","walk"],
+["He works in an office.","他在办公室工作。","office"],
+["I drink coffee in the morning.","我早上喝咖啡。","coffee"],
+["They play football on Sunday.","他们周日踢足球。","Sunday"],
+["My mother cooks dinner.","我妈妈做晚饭。","cooks"],
+["I go to bed at eleven.","我十一点睡觉。","eleven"],
+["We watch TV after dinner.","我们晚饭后看电视。","TV"],
+/* 第 3 组 · 询问与礼貌 */
+["What is your name?","你叫什么名字？","name"],
+["How are you today?","你今天怎么样？","today"],
+["Can you help me?","你能帮我吗？","help"],
+["Where is the station?","车站在哪里？","station"],
+["How much is this?","这个多少钱？","much"],
+["May I come in?","我可以进来吗？","come"],
+["Do you speak English?","你会说英语吗？","English"],
+["What time is it?","现在几点？","time"],
+["Please sit down.","请坐。","down"],
+["Thank you very much.","非常感谢。","thank"],
+/* 第 4 组 · 时间与计划 */
+["I will call you tomorrow.","我明天给你打电话。","tomorrow"],
+["We have a meeting at nine.","我们九点开会。","meeting"],
+["The train leaves at six.","火车六点出发。","leaves"],
+["I am busy this week.","我这周很忙。","busy"],
+["She will come back soon.","她很快会回来。","soon"],
+["It is time to go.","该走了。","time"],
+["I work from Monday to Friday.","我周一到周五上班。","Monday"],
+["We will meet next week.","我们下周见。","next"],
+["He is late again.","他又迟到了。","late"],
+["The shop closes at ten.","商店十点关门。","closes"],
+/* 第 5 组 · 喜好与感受 */
+["I like this song.","我喜欢这首歌。","song"],
+["She does not like coffee.","她不喜欢咖啡。","coffee"],
+["I feel tired today.","我今天很累。","tired"],
+["This food is very good.","这个食物很好吃。","good"],
+["He is happy to see you.","他见到你很高兴。","happy"],
+["I am not sure.","我不确定。","sure"],
+["That sounds great.","听起来不错。","great"],
+["I love my family.","我爱我的家人。","family"],
+["She wants a new phone.","她想要一个新手机。","phone"],
+["We need more time.","我们需要更多时间。","more"],
+/* 第 6 组 · 工作与学习 */
+["I learn English every day.","我每天学英语。","English"],
+["He works with a computer.","他用电脑工作。","computer"],
+["Our team has five people.","我们团队有五个人。","team"],
+["I finish my work at six.","我六点完成工作。","finish"],
+["She is good at her job.","她很擅长她的工作。","job"],
+["We study together after work.","我们下班后一起学习。","together"],
+["This report is important.","这份报告很重要。","important"],
+["I need to check the data.","我需要检查数据。","data"],
+["Can you send me the file?","你能把文件发给我吗？","file"],
+["He will start a new project.","他要开始一个新项目。","project"],
+/* 第 7 组 · 出行与生活服务 */
+["I want to buy a ticket.","我想买一张票。","ticket"],
+["The bus is very crowded.","公交车很挤。","crowded"],
+["How do I get to the airport?","我怎么去机场？","airport"],
+["I need a doctor.","我需要医生。","doctor"],
+["Please open the window.","请打开窗户。","open"],
+["The room is too dark.","房间太暗了。","dark"],
+["I will pay by phone.","我用手机支付。","pay"],
+["Where can I park my car?","我在哪里可以停车？","park"],
+["The food here is cheap.","这里的食物很便宜。","cheap"],
+["I lost my key.","我把钥匙丢了。","lost"],
+/* 第 8 组 · 描述与解释 */
+["This is easier than I thought.","这比我想的容易。","easier"],
+["The weather is getting colder.","天气变冷了。","colder"],
+["My phone is almost dead.","我手机快没电了。","dead"],
+["He speaks English very well.","他英语说得很好。","well"],
+["I am learning something new.","我在学新东西。","learning"],
+["The problem is not simple.","这个问题不简单。","problem"],
+["We need a better plan.","我们需要更好的计划。","plan"],
+["It takes about ten minutes.","大约需要十分钟。","minutes"],
+["She looks very tired today.","她今天看起来很累。","looks"],
+["Everything is ready now.","现在一切都准备好了。","everything"],
+/* 第 9 组 · AI 相关句子 */
+["AI can help us work faster.","AI 能帮我们工作更快。","faster"],
+["I use AI to learn English.","我用 AI 学英语。","use"],
+["This model is very smart.","这个模型很聪明。","model"],
+["The data is not correct.","数据不正确。","correct"],
+["I will ask the AI a question.","我要问 AI 一个问题。","question"],
+["AI learns from a lot of data.","AI 从大量数据中学习。","learns"],
+["The answer is not always right.","答案并不总是对的。","always"],
+["We should check the result.","我们应该检查结果。","result"],
+["He is building an AI system.","他在搭建一个 AI 系统。","building"],
+["AI is a tool, not magic.","AI 是工具，不是魔法。","magic"],
+/* 第 10 组 · 进阶表达 */
+["I have been learning English for a year.","我学英语已经一年了。","year"],
+["If I practice every day, I will improve.","如果每天练习，我就会有进步。","practice"],
+["It is important to keep going.","坚持下去很重要。","keep"],
+["I used to be afraid of speaking.","我以前害怕开口说。","afraid"],
+["The more you use it, the better it gets.","用得越多，效果越好。","better"],
+["I am trying to build a new habit.","我在尝试养成一个新习惯。","habit"],
+["Small steps lead to big changes.","小步带来大改变。","steps"],
+["I would like to learn more about it.","我想多了解一些。","about"],
+["Never give up on your goal.","不要放弃你的目标。","goal"],
+["Practice makes progress, not perfection.","练习带来进步，而不是完美。","progress"]
+];
+/* ===== 雅思 6 拓展词 · 第一批：教育 / 职场 / 城市生活 ===== */
+DAILY_WORDS.push(
+["education","/ˌedʒuˈkeɪʃn/","n. 教育","Education changes lives.","教育改变人生。"],
+["student","/ˈstuːdnt/","n. 学生","Every student needs time.","每个学生都需要时间。"],
+["teacher","/ˈtiːtʃər/","n. 老师","My teacher is patient.","我的老师很有耐心。"],
+["class","/klæs/","n. 课；班级","The class starts at eight.","课八点开始。"],
+["course","/kɔːrs/","n. 课程","This course is useful.","这门课程很有用。"],
+["lesson","/ˈlesn/","n. 课；教训","One lesson a day is enough.","一天一节课就够了。"],
+["subject","/ˈsʌbdʒɪkt/","n. 科目；主题","Math is my best subject.","数学是我最好的科目。"],
+["exam","/ɪɡˈzæm/","n. 考试","The exam is next week.","考试在下周。"],
+["quiz","/kwɪz/","n. 小测验","We had a short quiz today.","我们今天做了个小测验。"],
+["score","/skɔːr/","n. 分数；得分","My score improved by ten points.","我的分数提高了十分。"],
+["grade","/ɡreɪd/","n. 年级；成绩","She got a good grade.","她拿到了好成绩。"],
+["degree","/dɪˈɡriː/","n. 学位；程度","He has a master degree.","他有硕士学位。"],
+["university","/ˌjuːnɪˈvɜːrsəti/","n. 大学","She studies at a university.","她在一所大学读书。"],
+["college","/ˈkɑːlɪdʒ/","n. 学院","The college is near the park.","学院在公园附近。"],
+["study","/ˈstʌdi/","v./n. 学习；研究","I study English every evening.","我每晚学英语。"],
+["research","/rɪˈsɜːrtʃ/","n./v. 研究","His research takes two years.","他的研究要两年。"],
+["literacy","/ˈlɪtərəsi/","n. 读写能力","Digital literacy is important.","数字素养很重要。"],
+["skill","/skɪl/","n. 技能","Speaking is a key skill.","口语是一项关键技能。"],
+["exercise","/ˈeksərsaɪz/","n./v. 练习；锻炼","Do the exercise twice.","这个练习做两遍。"],
+["review","/rɪˈvjuː/","v./n. 复习；评论","Review the words tonight.","今晚复习单词。"],
+["memorize","/ˈmeməraɪz/","v. 记住；背","Do not memorize without meaning.","不要无意义地死记。"],
+["note","/noʊt/","n. 笔记；便条","Take notes while listening.","听的时候记笔记。"],
+["question","/ˈkwestʃən/","n. 问题","Ask one question at a time.","一次问一个问题。"],
+["answer","/ˈænsər/","n./v. 答案；回答","Your answer is correct.","你的答案是对的。"],
+["problem","/ˈprɑːbləm/","n. 问题；难题","Solve the problem step by step.","一步步解决问题。"],
+["idea","/aɪˈdɪə/","n. 想法；主意","That is a great idea.","那是个好主意。"],
+["reason","/ˈriːzn/","n. 原因；理由","Tell me the reason, please.","请告诉我原因。"],
+["example","/ɪɡˈzæmpl/","n. 例子","Give me one example.","给我一个例子。"],
+["explain","/ɪkˈspleɪn/","v. 解释","Can you explain it again?","你能再解释一遍吗？"],
+["understand","/ˌʌndərˈstænd/","v. 理解","I understand this sentence now.","我现在懂这句话了。"],
+["remember","/rɪˈmembər/","v. 记得","I remember your name.","我记得你的名字。"],
+["forget","/fərˈɡet/","v. 忘记","Do not forget to review.","别忘了复习。"],
+["think","/θɪŋk/","v. 思考；认为","Think before you answer.","回答前先想一下。"],
+["decide","/dɪˈsaɪd/","v. 决定","You must decide today.","你今天必须决定。"],
+["choose","/tʃuːz/","v. 选择","Choose one from these three.","从这三个里选一个。"],
+["improve","/ɪmˈpruːv/","v. 提高；改善","Reading improves your writing.","阅读提高写作。"],
+["progress","/ˈprɑːɡres/","n. 进步","Small progress is still progress.","一点点进步也是进步。"],
+["level","/ˈlevl/","n. 水平；等级","My level is still beginner.","我的水平还是初级。"],
+["goal","/ɡoʊl/","n. 目标","Set one clear goal.","定一个清晰的目标。"],
+["strategy","/ˈstrætədʒi/","n. 策略","We need a better strategy.","我们需要更好的策略。"],
+["habit","/ˈhæbɪt/","n. 习惯","A daily habit beats motivation.","每日习惯胜过一时热情。"],
+["focus","/ˈfoʊkəs/","v./n. 专注","Focus on one task at a time.","一次只专注一个任务。"],
+["concentrate","/ˈkɑːnsntreɪt/","v. 集中注意力","I cannot concentrate here.","我在这里无法集中。"],
+["effort","/ˈefərt/","n. 努力","Effort matters more than talent.","努力比天赋更重要。"],
+["success","/səkˈses/","n. 成功","Success comes from repetition.","成功来自重复。"],
+["fail","/feɪl/","v. 失败","Fail early, learn faster.","早点失败，学得更快。"],
+["try","/traɪ/","v. 尝试","Try once more, slowly.","再试一次，慢慢来。"],
+["aim","/eɪm/","v./n. 目标；瞄准","Aim for six point five.","目标 6.5 分。"],
+["career","/kəˈrɪr/","n. 职业","He changed his career at thirty.","他三十岁转行。"],
+["company","/ˈkʌmpəni/","n. 公司","The company is growing fast.","这家公司发展很快。"],
+["manager","/ˈmænɪdʒər/","n. 经理","My manager is easy to talk to.","我的经理很好沟通。"],
+["leader","/ˈliːdər/","n. 领导","A good leader listens first.","好的领导先听。"],
+["team","/tiːm/","n. 团队","Our team has five people.","我们团队有五个人。"],
+["staff","/stæf/","n. 员工（总称）","The staff are very friendly.","员工都很友好。"],
+["employee","/ɪmˈplɔɪiː/","n. 雇员","Every employee has a badge.","每个员工都有工牌。"],
+["salary","/ˈsæləri/","n. 薪水","Salary is paid monthly.","薪水按月发放。"],
+["income","/ˈɪnkʌm/","n. 收入","Save part of your income.","存下一部分收入。"],
+["cost","/kɔːst/","n./v. 成本；花费","The cost is too high.","成本太高了。"],
+["pay","/peɪ/","v./n. 支付；报酬","I will pay by card.","我刷卡支付。"],
+["contract","/ˈkɑːntrækt/","n. 合同","Read the contract carefully.","仔细读合同。"],
+["meeting","/ˈmiːtɪŋ/","n. 会议","The meeting starts at nine.","会议九点开始。"],
+["project","/ˈprɑːdʒekt/","n. 项目","This project takes one month.","这个项目要一个月。"],
+["task","/tæsk/","n. 任务","Finish this task first.","先完成这个任务。"],
+["report","/rɪˈpɔːrt/","n./v. 报告","Send me the report today.","今天把报告发我。"],
+["client","/ˈklaɪənt/","n. 客户","The client wants a change.","客户想改一点。"],
+["service","/ˈsɜːrvɪs/","n. 服务","Their service is fast.","他们的服务很快。"],
+["product","/ˈprɑːdʌkt/","n. 产品","This product sells well.","这个产品卖得好。"],
+["trade","/treɪd/","n./v. 贸易；交易","Trade helps both sides.","贸易对双方都有利。"],
+["brand","/brænd/","n. 品牌","The brand is well known.","这个品牌很有名。"],
+["price","/praɪs/","n. 价格","The price went up.","价格上涨了。"],
+["quality","/ˈkwɑːləti/","n. 质量","Quality beats quantity.","质量胜过数量。"],
+["efficiency","/ɪˈfɪʃnsi/","n. 效率","Good tools raise efficiency.","好工具提高效率。"],
+["experience","/ɪkˈspɪriəns/","n. 经验；经历","Experience is the best teacher.","经验是最好的老师。"],
+["interview","/ˈɪntərvjuː/","n./v. 面试","The interview lasts an hour.","面试持续一小时。"],
+["resume","/ˈrezəmeɪ/","n. 简历","Keep your resume to one page.","简历保持一页。"],
+["apply","/əˈplaɪ/","v. 申请；应用","Apply for the job online.","在线申请这份工作。"],
+["require","/rɪˈkwaɪər/","v. 需要；要求","This job requires English.","这份工作需要英语。"],
+["provide","/prəˈvaɪd/","v. 提供","They provide free training.","他们提供免费培训。"],
+["support","/səˈpɔːrt/","v./n. 支持","Thank you for your support.","谢谢你的支持。"],
+["manage","/ˈmænɪdʒ/","v. 管理；设法完成","She manages ten people.","她管理十个人。"],
+["organize","/ˈɔːrɡənaɪz/","v. 组织；整理","Organize your files today.","今天整理你的文件。"],
+["achieve","/əˈtʃiːv/","v. 达成；实现","You can achieve this in a year.","你能在一年内做到。"],
+["target","/ˈtɑːrɡɪt/","n. 目标；指标","Our target is six thousand words.","我们的目标是六千词。"],
+["deadline","/ˈdedlaɪn/","n. 截止时间","The deadline is Friday.","截止时间是周五。"],
+["schedule","/ˈskedʒuːl/","n./v. 日程；安排","Fit study into your schedule.","把学习排进日程。"],
+["overtime","/ˈoʊvərtaɪm/","n. 加班","Too much overtime hurts health.","加班太多伤身体。"],
+["bonus","/ˈboʊnəs/","n. 奖金","The bonus came on time.","奖金按时发了。"],
+["promote","/prəˈmoʊt/","v. 晋升；推广","He was promoted last month.","他上个月升职了。"],
+["quit","/kwɪt/","v. 辞职；停止","Never quit on a bad day.","别在状态差的那天放弃。"],
+["hire","/ˈhaɪər/","v. 招聘；雇用","They hire two engineers.","他们招两个工程师。"],
+["coach","/koʊtʃ/","n./v. 教练；辅导","A coach shortens the path.","教练能缩短路径。"],
+["lead","/liːd/","v. 带领；领导","Lead by example.","以身作则地带领。"],
+["cooperate","/koʊˈɑːpəreɪt/","v. 合作","Teams must cooperate.","团队必须合作。"],
+["transport","/ˈtrænspɔːrt/","n. 交通；运输","Public transport is cheaper.","公共交通更便宜。"],
+["traffic","/ˈtræfɪk/","n. 交通流量","Traffic is heavy at eight.","八点交通很堵。"],
+["distance","/ˈdɪstəns/","n. 距离","The distance is forty kilometers.","距离四十公里。"],
+["direction","/dəˈrekʃn/","n. 方向","Check the direction first.","先确认方向。"],
+["neighbor","/ˈneɪbər/","n. 邻居","My neighbor is very quiet.","我的邻居很安静。"],
+["community","/kəˈmjuːnəti/","n. 社区","The community holds a party.","社区办了个聚会。"],
+["apartment","/əˈpɑːrtmənt/","n. 公寓","The apartment is small but clean.","公寓小但干净。"],
+["rent","/rent/","n./v. 租金；租","Rent takes half my income.","房租占我一半收入。"],
+["own","/oʊn/","v./adj. 拥有；自己的","I own a small bike.","我有一辆小车。"],
+["build","/bɪld/","v. 建造；建立","Build one habit at a time.","一次建立一个习惯。"],
+["area","/ˈeriə/","n. 区域；面积","This area is very safe.","这个区域很安全。"],
+["center","/ˈsentər/","n. 中心","Meet me at the city center.","在市中心见我。"],
+["local","/ˈloʊkl/","adj. 本地的","Local food is cheaper.","本地食物更便宜。"],
+["public","/ˈpʌblɪk/","adj. 公共的","Public libraries are free.","公共图书馆免费。"],
+["private","/ˈpraɪvət/","adj. 私人的","Keep your data private.","保护你的数据隐私。"],
+["safety","/ˈseɪfti/","n. 安全","Safety comes before speed.","安全优先于速度。"],
+["rule","/ruːl/","n. 规则","Follow the rule, then break it smartly.","先守规则，再聪明地突破。"],
+["law","/lɔː/","n. 法律","Everyone is equal before the law.","法律面前人人平等。"],
+["police","/pəˈliːs/","n. 警察","Call the police if needed.","需要时报警。"],
+["government","/ˈɡʌvərnmənt/","n. 政府","The government announced a plan.","政府公布了计划。"],
+["citizen","/ˈsɪtɪzn/","n. 公民","Every citizen has rights.","每个公民都有权利。"],
+["population","/ˌpɑːpjuˈleɪʃn/","n. 人口","The population keeps growing.","人口持续增长。"],
+["culture","/ˈkʌltʃər/","n. 文化","Culture shapes how we talk.","文化塑造我们说话的方式。"],
+["history","/ˈhɪstri/","n. 历史","History repeats itself.","历史会重演。"],
+["tradition","/trəˈdɪʃn/","n. 传统","This tradition is two hundred years old.","这个传统有两百年了。"],
+["festival","/ˈfestɪvl/","n. 节日","The festival lasts three days.","节日持续三天。"],
+["grammar","/ˈɡræmər/","n. 语法","Grammar is the frame, words are the bricks.","语法是框架，单词是砖。"],
+["food","/fuːd/","n. 食物","Good food makes a good day.","好食物带来好一天。"],
+["restaurant","/ˈrestrɑːnt/","n. 餐厅","This restaurant is always full.","这家餐厅总是满座。"],
+["menu","/ˈmenjuː/","n. 菜单","Read the menu before ordering.","点单前先看菜单。"],
+["order","/ˈɔːrdər/","v./n. 点单；顺序；命令","Order the small size.","点小份的。"],
+["deliver","/dɪˈlɪvər/","v. 配送；交付","They deliver in thirty minutes.","他们三十分钟送达。"],
+["package","/ˈpækɪdʒ/","n. 包裹","The package arrived early.","包裹提前到了。"],
+["address","/əˈdres/","n. 地址","Write the address clearly.","地址写清楚。"],
+["post","/poʊst/","v./n. 邮寄；发布；帖子","Post it before noon.","中午前寄出。"],
+["account","/əˈkaʊnt/","n. 账户","Check your account balance.","查一下账户余额。"],
+["cash","/kæʃ/","n. 现金","Some shops only take cash.","有些店只收现金。"],
+["card","/kɑːrd/","n. 卡；卡片","Tap your card here.","在这里刷卡。"],
+["change","/tʃeɪndʒ/","n./v. 零钱；改变","Keep the change.","零钱不用找了。"],
+["receipt","/rɪˈsiːt/","n. 收据","Keep the receipt for returns.","留好收据方便退换。"],
+["discount","/ˈdɪskaʊnt/","n. 折扣","There is a ten percent discount.","有九折优惠。"],
+["expensive","/ɪkˈspensɪv/","adj. 昂贵的","Good shoes are expensive but last.","好鞋贵但耐穿。"],
+["affordable","/əˈfɔːrdəbl/","adj. 负担得起的","Find an affordable plan.","找个性价比合适的方案。"],
+["available","/əˈveɪləbl/","adj. 可用的；有空的","Is this seat available?","这个位子有人吗？"],
+["suburb","/ˈsʌbɜːrb/","n. 郊区","Housing is cheaper in the suburb.","郊区房价更便宜。"],
+["noise","/nɔɪz/","n. 噪音","Noise makes it hard to focus.","噪音让人难以专注。"],
+["quiet","/ˈkwaɪət/","adj. 安静的","A quiet room helps memory.","安静的房间有助记忆。"],
+["convenient","/kənˈviːniənt/","adj. 方便的","The subway is very convenient.","地铁非常方便。"],
+["nearby","/ˌnɪrˈbaɪ/","adj./adv. 附近的","There is a gym nearby.","附近有家健身房。"],
+["district","/ˈdɪstrɪkt/","n. 区域；街区","This district is busy at night.","这个街区晚上很热闹。"],
+["route","/ruːt/","n. 路线","Choose the shorter route.","选短一点的路。"],
+["crowded","/ˈkraʊdɪd/","adj. 拥挤的","The bus is crowded at eight.","八点公交很挤。"]
+);
+/* ===== 雅思 6 拓展词 · 第二批：健康 / 环境 / 科技 / 抽象情感 ===== */
+DAILY_WORDS.push(
+["health","/helθ/","n. 健康","Health is the first wealth.","健康是第一财富。"],
+["healthy","/ˈhelθi/","adj. 健康的","Stay healthy with small habits.","用小习惯保持健康。"],
+["ill","/ɪl/","adj. 生病的","He was ill last week.","他上周生病了。"],
+["disease","/dɪˈziːz/","n. 疾病","The disease spreads fast.","这种病传播很快。"],
+["pain","/peɪn/","n. 疼痛","The pain is getting better.","疼痛在好转。"],
+["headache","/ˈhedeɪk/","n. 头疼","I have a slight headache.","我有点头疼。"],
+["fever","/ˈfiːvər/","n. 发烧","She has a high fever.","她发高烧。"],
+["medicine","/ˈmedɪsn/","n. 药；医学","Take the medicine after dinner.","饭后吃药。"],
+["doctor","/ˈdɑːktər/","n. 医生","See a doctor if it lasts.","持续不好就去看医生。"],
+["nurse","/nɜːrs/","n. 护士","The nurse checked my pulse.","护士给我量了脉搏。"],
+["patient","/ˈpeɪʃnt/","n./adj. 病人；耐心的","Be patient with yourself.","对自己有耐心。"],
+["treat","/triːt/","v. 治疗；对待","Doctors treat the cause, not just pain.","医生治病因，不只是止痛。"],
+["cure","/kjʊr/","v./n. 治愈","There is no quick cure.","没有快速治愈的办法。"],
+["recover","/rɪˈkʌvər/","v. 恢复","It takes a week to recover.","恢复需要一周。"],
+["rest","/rest/","n./v. 休息","Rest is part of training.","休息是训练的一部分。"],
+["energy","/ˈenərdʒi/","n. 精力；能量","Sleep restores your energy.","睡眠恢复精力。"],
+["stress","/stres/","n. 压力","Stress slows learning.","压力会拖慢学习。"],
+["relax","/rɪˈlæks/","v. 放松","Relax your shoulders now.","现在放松肩膀。"],
+["mood","/muːd/","n. 心情","Music changes my mood.","音乐改变我的心情。"],
+["emotion","/ɪˈmoʊʃn/","n. 情绪","Name the emotion and it shrinks.","说出情绪，它就会变小。"],
+["mental","/ˈmentl/","adj. 心理的；精神的","Mental health matters too.","心理健康同样重要。"],
+["physical","/ˈfɪzɪkl/","adj. 身体的；物理的","Physical work needs real rest.","体力劳动需要真正的休息。"],
+["weight","/weɪt/","n. 体重；重量","Track weight weekly, not daily.","体重按周看，不要天天称。"],
+["diet","/ˈdaɪət/","n. 饮食","A balanced diet beats a strict one.","均衡饮食胜过严格节食。"],
+["nutrition","/nuˈtrɪʃn/","n. 营养","Good nutrition supports recovery.","好的营养支持恢复。"],
+["protein","/ˈproʊtiːn/","n. 蛋白质","Protein repairs your muscles.","蛋白质修复肌肉。"],
+["vitamin","/ˈvaɪtəmɪn/","n. 维生素","Vitamins come from real food.","维生素来自真正的食物。"],
+["muscle","/ˈmʌsl/","n. 肌肉","Muscle grows while you sleep.","肌肉在你睡觉时生长。"],
+["bone","/boʊn/","n. 骨头","Strong bones need training and calcium.","强骨需要训练和钙。"],
+["breath","/breθ/","n. 呼吸（名词）","Take a deep breath.","深呼吸。"],
+["breathe","/briːð/","v. 呼吸","Breathe slowly when nervous.","紧张时慢慢呼吸。"],
+["pulse","/pʌls/","n. 脉搏","Check your pulse after running.","跑完测一下脉搏。"],
+["injury","/ˈɪndʒəri/","n. 受伤","Rest the injury, do not push.","受伤就休息，别硬撑。"],
+["symptom","/ˈsɪmptəm/","n. 症状","Fever is one symptom.","发烧是一种症状。"],
+["treatment","/ˈtriːtmənt/","n. 治疗","The treatment takes three weeks.","治疗要三周。"],
+["clinic","/ˈklɪnɪk/","n. 诊所","The clinic opens at eight.","诊所八点开门。"],
+["insurance","/ɪnˈʃʊrəns/","n. 保险","Insurance protects your savings.","保险保护你的存款。"],
+["environment","/ɪnˈvaɪrənmənt/","n. 环境","A quiet environment helps focus.","安静的环境有助于专注。"],
+["nature","/ˈneɪtʃər/","n. 自然；本性","Walking in nature lowers stress.","在自然中走路能降低压力。"],
+["climate","/ˈklaɪmət/","n. 气候","The climate here is mild.","这里气候温和。"],
+["temperature","/ˈtemprətʃər/","n. 温度","The temperature dropped ten degrees.","温度降了十度。"],
+["pollution","/pəˈluːʃn/","n. 污染","Air pollution affects health.","空气污染影响健康。"],
+["waste","/weɪst/","v./n. 浪费；废弃物","Do not waste your morning.","别浪费你的早晨。"],
+["recycle","/ˌriːˈsaɪkl/","v. 回收","We recycle paper and plastic.","我们回收纸和塑料。"],
+["resource","/ˈriːsɔːrs/","n. 资源","Time is your scarcest resource.","时间是你最稀缺的资源。"],
+["forest","/ˈfɔːrɪst/","n. 森林","The forest is protected by law.","森林受法律保护。"],
+["ocean","/ˈoʊʃn/","n. 海洋","The ocean covers most of the earth.","海洋覆盖地球大部分。"],
+["desert","/ˈdezərt/","n. 沙漠","Water is precious in the desert.","沙漠里水很珍贵。"],
+["island","/ˈaɪlənd/","n. 岛屿","The island has no airport.","这个岛没有机场。"],
+["earth","/ɜːrθ/","n. 地球","We only have one earth.","我们只有一个地球。"],
+["planet","/ˈplænɪt/","n. 行星","Mars is a nearby planet.","火星是邻近的行星。"],
+["animal","/ˈænɪml/","n. 动物","Some animals sleep in winter.","有些动物冬天睡觉。"],
+["plant","/plænt/","n./v. 植物；种植","Plant one tree this spring.","今年春天种一棵树。"],
+["agriculture","/ˈæɡrɪkʌltʃər/","n. 农业","Agriculture uses much water.","农业用水很多。"],
+["industry","/ˈɪndəstri/","n. 工业；行业","The industry is changing fast.","这个行业变化很快。"],
+["factory","/ˈfæktəri/","n. 工厂","The factory runs day and night.","工厂昼夜运转。"],
+["material","/məˈtɪriəl/","n. 材料；素材","Buy better material, last longer.","买好材料，用得更久。"],
+["plastic","/ˈplæstɪk/","n./adj. 塑料（的）","Plastic bottles take centuries.","塑料瓶要几百年才分解。"],
+["metal","/ˈmetl/","n. 金属","The frame is made of metal.","框架是金属做的。"],
+["wood","/wʊd/","n. 木头；木材","This table is solid wood.","这张桌子是实木的。"],
+["fire","/ˈfaɪər/","n. 火；火灾","Keep a fire extinguisher.","备一个灭火器。"],
+["flood","/flʌd/","n. 洪水","The flood cut off the road.","洪水切断了道路。"],
+["drought","/draʊt/","n. 干旱","The drought lasted three months.","干旱持续了三个月。"],
+["storm","/stɔːrm/","n. 暴风雨","A storm is coming tonight.","今晚有暴风雨。"],
+["grow","/ɡroʊ/","v. 生长；增长","Skills grow with practice.","技能随练习增长。"],
+["harvest","/ˈhɑːrvɪst/","n./v. 收获","Autumn is the harvest season.","秋天是收获季。"],
+["protect","/prəˈtekt/","v. 保护","Protect your sleep time.","保护你的睡眠时间。"],
+["reduce","/rɪˈduːs/","v. 减少","Reduce one bad habit this month.","这个月减掉一个坏习惯。"],
+["increase","/ɪnˈkriːs/","v. 增加","Increase weight slowly.","慢慢加重量。"],
+["technology","/tekˈnɑːlədʒi/","n. 技术","Technology changes how we work.","技术改变我们的工作方式。"],
+["device","/dɪˈvaɪs/","n. 设备","Put the device away while studying.","学习时把设备放远。"],
+["screen","/skriːn/","n. 屏幕","Too much screen time hurts eyes.","看屏幕太久伤眼睛。"],
+["software","/ˈsɔːftwer/","n. 软件","Update your software monthly.","每月更新软件。"],
+["hardware","/ˈhɑːrdwer/","n. 硬件","Hardware limits speed.","硬件限制速度。"],
+["internet","/ˈɪntərnet/","n. 互联网","The internet is a tool, not a toy.","互联网是工具，不是玩具。"],
+["website","/ˈwebsaɪt/","n. 网站","The website loads slowly.","这个网站加载很慢。"],
+["app","/æp/","n. 应用","This app saves my progress.","这个应用保存我的进度。"],
+["online","/ˌɑːnˈlaɪn/","adj./adv. 在线的","Online courses are flexible.","在线课程很灵活。"],
+["download","/ˈdaʊnloʊd/","v. 下载","Download the file first.","先下载文件。"],
+["upload","/ˈʌploʊd/","v. 上传","Upload your photo here.","在这里上传照片。"],
+["click","/klɪk/","v./n. 点击","Click the button once.","点一下按钮。"],
+["share","/ʃer/","v./n. 分享","Share the link with me.","把链接分享给我。"],
+["message","/ˈmesɪdʒ/","n. 消息","I got your message.","我收到你的消息了。"],
+["email","/ˈiːmeɪl/","n./v. 邮件","Send me an email tonight.","今晚给我发邮件。"],
+["photo","/ˈfoʊtoʊ/","n. 照片","Take a photo of the page.","给这页拍张照。"],
+["news","/nuːz/","n. 新闻","Read news in English daily.","每天读英文新闻。"],
+["media","/ˈmiːdiə/","n. 媒体","Media shapes opinion.","媒体塑造观点。"],
+["advertise","/ˈædvərtaɪz/","v. 做广告","They advertise on every platform.","他们在每个平台打广告。"],
+["audience","/ˈɔːdiəns/","n. 观众；听众","Know your audience first.","先了解你的受众。"],
+["content","/ˈkɑːntent/","n. 内容","Good content beats good design.","好内容胜过好设计。"],
+["information","/ˌɪnfərˈmeɪʃn/","n. 信息","Check the information twice.","信息核对两遍。"],
+["search","/sɜːrtʃ/","v./n. 搜索","Search with clear keywords.","用清晰的关键词搜索。"],
+["keyword","/ˈkiːwɜːrd/","n. 关键词","One keyword can find it.","一个关键词就能找到。"],
+["password","/ˈpæswɜːrd/","n. 密码","Use a different password everywhere.","每个地方用不同密码。"],
+["secure","/sɪˈkjʊr/","adj. 安全的","Keep the connection secure.","保持连接安全。"],
+["charger","/ˈtʃɑːrdʒər/","n. 充电器","Bring your charger with you.","带上充电器。"],
+["battery","/ˈbætəri/","n. 电池","The battery lasts one day.","电池能用一天。"],
+["signal","/ˈsɪɡnəl/","n. 信号","The signal is weak here.","这里信号很弱。"],
+["connect","/kəˈnekt/","v. 连接；联系","Connect the phone to the screen.","把手机连到屏幕上。"],
+["update","/ˌʌpˈdeɪt/","v./n. 更新","Update it before you travel.","出行前更新一下。"],
+["version","/ˈvɜːrʒn/","n. 版本","This version is faster.","这个版本更快。"],
+["engineer","/ˌendʒɪˈnɪr/","n. 工程师","She is a software engineer.","她是一名软件工程师。"],
+["design","/dɪˈzaɪn/","v./n. 设计","Design for the smallest screen first.","先为最小的屏幕设计。"],
+["create","/kriˈeɪt/","v. 创造","Create one thing every week.","每周创造一件东西。"],
+["invent","/ɪnˈvent/","v. 发明","Someone invented this tool.","有人发明了这个工具。"],
+["machine","/məˈʃiːn/","n. 机器","The machine needs oil.","这台机器需要上油。"],
+["love","/lʌv/","v./n. 爱","Love what you practice.","爱上你练习的东西。"],
+["like","/laɪk/","v./prep. 喜欢；像","I like this way of learning.","我喜欢这种学习方式。"],
+["hope","/hoʊp/","v./n. 希望","Hope is a start, not a plan.","希望是起点，不是计划。"],
+["fear","/fɪr/","n./v. 恐惧","Face the fear once.","正面面对一次恐惧。"],
+["worry","/ˈwɜːri/","v./n. 担心","Do not worry about mistakes.","别担心犯错。"],
+["proud","/praʊd/","adj. 骄傲的","I am proud of this progress.","我为这个进步骄傲。"],
+["angry","/ˈæŋɡri/","adj. 生气的","Anger hides a need.","愤怒背后藏着一个需求。"],
+["sad","/sæd/","adj. 难过的","It is fine to feel sad.","感到难过是可以的。"],
+["lonely","/ˈloʊnli/","adj. 孤独的","Learning alone can feel lonely.","独自学习会感到孤独。"],
+["confident","/ˈkɑːnfɪdənt/","adj. 自信的","Confidence comes from evidence.","自信来自证据。"],
+["nervous","/ˈnɜːrvəs/","adj. 紧张的","Being nervous means you care.","紧张说明你在意。"],
+["kind","/kaɪnd/","adj./n. 善良的；种类","Be kind to beginners.","对初学者友善一点。"],
+["honest","/ˈɑːnɪst/","adj. 诚实的","Be honest about your level.","对自己的水平诚实。"],
+["polite","/pəˈlaɪt/","adj. 有礼貌的","A polite word opens doors.","一句礼貌的话能打开门。"],
+["brave","/breɪv/","adj. 勇敢的","Brave people start before ready.","勇敢的人在准备好之前就开始。"],
+["calm","/kɑːm/","adj. 冷静的","Stay calm and finish the sentence.","冷静下来把句子说完。"],
+["curious","/ˈkjʊriəs/","adj. 好奇的","Stay curious about words.","对单词保持好奇。"],
+["creative","/kriˈeɪtɪv/","adj. 有创造力的","Creative work needs input.","创造需要输入。"],
+["grateful","/ˈɡreɪtfl/","adj. 感激的","Be grateful for small steps.","为小进步感恩。"],
+["respect","/rɪˈspekt/","v./n. 尊重","Respect other people's time.","尊重别人的时间。"],
+["trust","/trʌst/","v./n. 信任","Trust the process.","相信过程。"],
+["promise","/ˈprɑːmɪs/","v./n. 承诺","Keep the promise to yourself.","遵守对自己的承诺。"],
+["choice","/tʃɔɪs/","n. 选择","You always have a choice.","你总有选择。"],
+["chance","/tʃæns/","n. 机会","Take the chance now.","现在就抓住机会。"],
+["value","/ˈvæljuː/","n./v. 价值；重视","Value consistency over intensity.","重视持续，而不是强度。"],
+["meaning","/ˈmiːnɪŋ/","n. 意义","Find meaning in the repetition.","在重复中找到意义。"],
+["purpose","/ˈpɜːrpəs/","n. 目的","A clear purpose keeps you going.","清晰的目的让你坚持下去。"],
+["truth","/truːθ/","n. 真相","The truth is simpler than the story.","真相比故事更简单。"],
+["fact","/fækt/","n. 事实","Separate fact from opinion.","区分事实和观点。"],
+["opinion","/əˈpɪnjən/","n. 观点","Everyone has an opinion.","每个人都有观点。"],
+["feeling","/ˈfiːlɪŋ/","n. 感受","Put the feeling into words.","把感受用语言表达出来。"],
+["attitude","/ˈætɪtuːd/","n. 态度","Attitude decides the result.","态度决定结果。"],
+["behavior","/bɪˈheɪvjər/","n. 行为","Change behavior, not just knowledge.","改变行为，不只是积累知识。"],
+["personality","/ˌpɜːrsəˈnæləti/","n. 性格","Personality is not fixed.","性格不是固定的。"]
+);
+/*DATA_SLOT*/</script>
+<script>
+/* 启动 */
+(function(){
+  const h=(location.hash||'').replace('#','');
+  const part=h.split('/');
+  if(TABS.some(t=>t.k===part[0]))route=part[0];
+  if(part[1]==='read')enMode='read';
+  if(part[1]==='write')enMode='write';
+  if(part[1]==='sent'){enGroup='sent';}
+  if(part[1]==='ai'){enGroup='ai';}
+  if(part[2]==='read'){enGroup='sent';enMode='read';}
+  if(part[2]==='blank'){enGroup='sent';enMode='blank';}
+  render();
+})();
+window.addEventListener('resize',()=>{});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)render();});
+</script>
+</body>
+</html>
