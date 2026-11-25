@@ -105,7 +105,9 @@ nav button.on i{filter:none;transform:translateY(-1px)}
 /* quiz / input */
 input[type=text]{width:100%;padding:14px;border-radius:14px;border:1.5px solid var(--line);
   background:var(--card);font-family:inherit;font-size:16px;color:var(--ink);outline:none}
-input[type=text]:focus{border-color:var(--pri)}
+input[type=password]{width:100%;padding:13px;border-radius:14px;border:1.5px solid var(--line);
+  background:var(--card);font-family:inherit;font-size:13px;color:var(--ink);outline:none}
+input[type=text]:focus,input[type=password]:focus{border-color:var(--pri)}
 select{width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--line);
   background:var(--card);font-family:inherit;font-size:13px;color:var(--ink);outline:none;appearance:none}
 select:focus{border-color:var(--pri)}
@@ -167,7 +169,7 @@ const el = (html)=>{const d=document.createElement('div');d.innerHTML=html.trim(
 const pad = n=>String(n).padStart(2,'0');
 const iso = d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const KEY = 'cog_growth_v1';
-const BUILD = 'v1.2 · 11/25';
+const BUILD = 'v1.3 · 11/25';
 const today = ()=>iso(new Date());
 function dateAdd(str,n){const d=new Date(str+'T00:00:00');d.setDate(d.getDate()+n);return iso(d);}
 function diffDays(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/864e5);}
@@ -177,11 +179,94 @@ let S = load();
 function load(){
   let s=null;
   try{s=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+  if(!s||!s.start){
+    // localStorage 被清时，尝试从 cookie 冗余备份恢复
+    try{
+      const m=document.cookie.match(/(?:^|; )cogbak=([^;]*)/);
+      if(m){const o=JSON.parse(decodeURIComponent(m[1]));if(o&&o.start)s=o;}
+    }catch(e){}
+  }
   if(!s||!s.start){s={start:today(),nick:'学习者',daily:{},seen:{},wrong:{},night:false,goals:{en:true,ai:true,fit:true,fin:true}};}
   s.daily=s.daily||{};s.seen=s.seen||{};s.wrong=s.wrong||{};s.sent=s.sent||{};
   return s;
 }
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){updateCookieBackup(S);scheduleBackup();}}
+
+/* ============ 备份：GitHub Gist 云同步 ============ */
+const GH_KEY='cog_growth_gh';
+const GH_DESC='认知成长 · 学习进度备份';
+function GH(){try{return JSON.parse(localStorage.getItem(GH_KEY)||'{}');}catch(e){return {};}}
+function GHSave(o){try{localStorage.setItem(GH_KEY,JSON.stringify(o));}catch(e){}}
+async function ghApi(path,opt){
+  const g=GH();
+  const r=await fetch('https://api.github.com'+path,Object.assign({
+    headers:{'Authorization':'Bearer '+(g.token||''),'Accept':'application/vnd.github+json','Content-Type':'application/json'}
+  },opt||{}));
+  if(!r.ok){const t=await r.text().catch(()=>'');throw new Error('HTTP '+r.status+(t?(' · '+t.slice(0,80)):''));}
+  return r.json();
+}
+async function findBackupGist(){
+  const list=await ghApi('/gists?per_page=100');
+  const hit=(list||[]).find(x=>x&&x.description===GH_DESC);
+  return hit?hit.id:null;
+}
+let bkTimer=null,bkBusy=false;
+function scheduleBackup(){
+  const g=GH();
+  if(!g.auto||!g.token||bkBusy)return;
+  clearTimeout(bkTimer);bkTimer=setTimeout(()=>backupNow(true),8000);
+}
+async function backupNow(silent){
+  const g=GH();
+  if(!g.token){if(!silent)toast('请先在下面填入 GitHub token');return false;}
+  bkBusy=true;
+  const body={description:GH_DESC,public:false,
+    files:{'cog-growth.json':{content:JSON.stringify({v:BUILD,at:Date.now(),data:S})}}};
+  try{
+    let id=g.gistId||await findBackupGist();
+    if(id){await ghApi('/gists/'+id,{method:'PATCH',body:JSON.stringify(body)});}
+    else{const r=await ghApi('/gists',{method:'POST',body:JSON.stringify(body)});id=r.id;}
+    GHSave(Object.assign(GH(),{gistId:id,last:Date.now()}));
+    if(!silent)toast('已备份到云端');
+    bkBusy=false;
+    return true;
+  }catch(e){bkBusy=false;if(!silent)toast('备份失败：'+e.message);return false;}
+}
+async function restoreNow(){
+  const g=GH();
+  if(!g.token){toast('请先填入 GitHub token');return;}
+  try{
+    let id=g.gistId||await findBackupGist();
+    if(!id){toast('账号里没找到备份，先做一次「立即备份」');return;}
+    const r=await ghApi('/gists/'+id);
+    const f=r.files&&(r.files['cog-growth.json']||Object.values(r.files||{})[0]);
+    if(!f||f.truncated){toast('备份内容不完整');return;}
+    const obj=JSON.parse(f.content||(await (await fetch(f.raw_url)).text()));
+    const data=obj.data||obj;
+    if(!data||!data.start){toast('备份格式不对');return;}
+    if(!confirm('用云端备份覆盖本机进度？当前进度会被替换'))return;
+    S=data;save();body_night();GHSave(Object.assign(GH(),{gistId:id,last:Date.now()}));
+    toast('已恢复云端进度');render();
+  }catch(e){toast('恢复失败：'+e.message);}
+}
+
+/* cookie 冗余：防只清 localStorage 的清理工具 */
+function updateCookieBackup(s){
+  try{
+    const mini=JSON.stringify({start:s.start,nick:s.nick,daily:s.daily,seen:s.seen,wrong:s.wrong,sent:s.sent,night:s.night,at:Date.now()});
+    if(mini.length>3800)return;
+    document.cookie='cogbak='+encodeURIComponent(mini)+';max-age=31536000;path=/;SameSite=Lax';
+  }catch(e){}
+}
+function restoreFromCookie(){
+  try{
+    const m=document.cookie.match(/(?:^|; )cogbak=([^;]*)/);
+    if(!m)return false;
+    const obj=JSON.parse(decodeURIComponent(m[1]));
+    if(!obj.start)return false;
+    S=Object.assign({},S,obj);save();return true;
+  }catch(e){return false;}
+}
 function D(){
   const k=today();
   const r=S.daily[k]||(S.daily[k]={w:{},s:{},enDone:false,aiDone:false,aiOk:0,fitDone:false,fitOk:0,finDone:false,finOk:0});
@@ -716,6 +801,7 @@ function viewCourse(k){
 
 /* ============ 我的 ============ */
 function viewMe(){
+  const g=GH();
   const seen=Object.keys(S.seen).length;
   const sentN=Object.keys(S.sent||{}).length;
   const wrongN=Object.keys(S.wrong).length;
@@ -795,6 +881,21 @@ function viewMe(){
     </div>
     <div class="tiny muted" style="margin-top:10px;line-height:1.65">真人发音取在线词典录音，单词和短句更自然；断网、长句或慢速跟读会自动回退系统语音。「朗读声音」只对系统语音生效。若系统声音仍偏机械，可在手机里下载高质量英语语音包（见下方说明）。</div>
     <div class="tiny muted" style="margin-top:10px;line-height:1.65">声音偏机械时：Windows 打开「设置 → 时间和语言 → 语音」，安装「英语（美国）」的自然语音包；安卓在系统「文字转语音」里下载高质量英文语音。装完回到这里，会多出 Aria / Emma 这类更自然的声音。</div>
+  </div>
+
+  <h2 class="sec">云备份（GitHub）</h2>
+  <div class="card">
+    <div class="row" style="margin-bottom:10px">
+      <div class="bold sm">备份状态</div><div class="spacer"></div>
+      <span class="tiny ${g.gistId?'':'muted'}">${g.token?(g.gistId?('已连接 · '+(g.last?new Date(g.last).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'待首次备份')):'token 已填 · 待备份'):'未配置'}</span>
+    </div>
+    <input type="password" id="ghToken" autocomplete="off" value="" placeholder="${g.token?'已保存 token（…'+String(g.token).slice(-4)+'），如需更换请输入新的':'粘贴 GitHub token（ghp_ 开头），只存本机'}">
+    <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-soft btn-sm" id="ghBackup">立即备份</button>
+      <button class="btn btn-ghost btn-sm" id="ghRestore">从云端恢复</button>
+      <button class="btn ${g.auto?'btn-soft':'btn-ghost'} btn-sm" id="ghAuto">自动同步 · ${g.auto?'开':'关'}</button>
+    </div>
+    <div class="tiny muted" style="margin-top:10px;line-height:1.65">token 只保存在本机，不会写进备份内容。首次备份会自动建一个私有 Gist；换手机时只填 token 点「从云端恢复」即可找回进度。进度同时写入了 cookie 冗余，只清 localStorage 的情况也能自愈。</div>
   </div>
 
   <h2 class="sec">设置</h2>
@@ -994,6 +1095,13 @@ function bindView(){
 
   // 我的
   if(route==='me'){
+    const gt=$('#ghToken');
+    if(gt)gt.onchange=()=>{const v=gt.value.trim();if(!v)return;
+      if(!/^(ghp_|github_pat_)/.test(v)){toast('这不像 GitHub token');return;}
+      GHSave(Object.assign(GH(),{token:v}));gt.value='';render();toast('token 已保存到本机');};
+    const gb=$('#ghBackup');if(gb)gb.onclick=()=>backupNow(false);
+    const gr=$('#ghRestore');if(gr)gr.onclick=()=>restoreNow();
+    const ga=$('#ghAuto');if(ga)ga.onclick=()=>{const gg=GH();GHSave(Object.assign(gg,{auto:!gg.auto}));render();toast(gg.auto?'已开启自动同步':'已关闭自动同步');};
     const vms=$('#voiceModeSel');
     if(vms)vms.onchange=()=>{S.voiceMode=vms.value;save();render();
       setTimeout(()=>{speak('Hello. Nice to meet you.');toast(vms.value==='sys'?'已切换系统语音':'已切换真人发音');},150);};
