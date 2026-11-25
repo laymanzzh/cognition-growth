@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#5b6cff">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="认知成长">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <title>认知成长 · 每日学习</title>
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
 <style>
@@ -161,6 +167,7 @@ const el = (html)=>{const d=document.createElement('div');d.innerHTML=html.trim(
 const pad = n=>String(n).padStart(2,'0');
 const iso = d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const KEY = 'cog_growth_v1';
+const BUILD = 'v1.2 · 11/25';
 const today = ()=>iso(new Date());
 function dateAdd(str,n){const d=new Date(str+'T00:00:00');d.setDate(d.getDate()+n);return iso(d);}
 function diffDays(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/864e5);}
@@ -796,7 +803,8 @@ function viewMe(){
     <div class="wrow" style="cursor:default" id="nightRow"><div style="flex:1"><div class="sm" style="font-weight:600">夜间模式</div></div><div class="tiny muted">${S.night?'已开启':'已关闭'} ›</div></div>
     <div class="wrow" style="cursor:default" id="resetRow"><div style="flex:1"><div class="sm" style="font-weight:600">清空学习数据</div><div class="tiny muted" style="margin-top:3px">进度、打卡、错词全部重置</div></div><div class="tiny" style="color:var(--bad)">重置</div></div>
   </div>
-  <div class="tiny muted" style="text-align:center;margin:18px 0 8px">认知成长 · 每日学习 · 所有数据保存在本机</div>
+  <div class="tiny muted" style="text-align:center;margin:18px 0 8px">认知成长 · ${BUILD} · 数据保存在本机</div>
+  <div class="tiny muted" style="text-align:center;margin-bottom:16px">已装到桌面时会自动更新，不用手动操作</div>
   `;
 }
 
@@ -2135,6 +2143,17 @@ DAILY_WORDS.push(
 })();
 window.addEventListener('resize',()=>{});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)render();});
+</script>
+<script>
+/* ---------- PWA：离线缓存 + 自动更新 ---------- */
+if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').then(function(reg){
+      try{reg.update();}catch(e){}
+      setInterval(function(){try{reg.update();}catch(e){}},60*60*1000); // 每小时查一次新版本
+    }).catch(function(){});
+  });
+}
 </script>
 </body>
 </html>
