@@ -170,7 +170,7 @@ const el = (html)=>{const d=document.createElement('div');d.innerHTML=html.trim(
 const pad = n=>String(n).padStart(2,'0');
 const iso = d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const KEY = 'cog_growth_v1';
-const BUILD = 'v1.6 · 11/25';
+const BUILD = 'v1.7 · 11/25';
 const today = ()=>iso(new Date());
 function dateAdd(str,n){const d=new Date(str+'T00:00:00');d.setDate(d.getDate()+n);return iso(d);}
 function diffDays(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/864e5);}
@@ -726,13 +726,12 @@ function viewRead(){
   <div class="card" style="text-align:center;padding:20px 16px">
     <button class="mic" id="micBtn">🎤</button>
     <div class="hint" id="hint">${SR?(isS?'按住 🎤 把整句读完，松手评分':'按住 🎤 读一遍，松手评分'):'先点 🔊 听一遍，自己跟读后点「我读完了」'}</div>
-    ${SR
-      ?`<div class="tiny muted" style="margin-top:6px">${isS?'整句读对 70% 以上算过':'说完即可看到发音评分'}</div>`
-      :`<div class="row" style="gap:10px;margin-top:12px">
-        <button class="btn btn-ghost btn-sm" id="playAgain" style="flex:1">🔊 再听一遍</button>
-        <button class="btn btn-main btn-sm" id="readDone" style="flex:1">✓ 我读完了</button>
-      </div>
-      <div class="tiny muted" style="margin-top:8px">本机浏览器不支持语音评分，改为跟读打卡：听 → 跟读 → 点完成</div>`}
+    <div class="row" style="gap:10px;margin-top:12px">
+      <button class="btn btn-ghost btn-sm" id="playAgain" style="flex:1">🔊 再听一遍</button>
+      <button class="btn btn-main btn-sm" id="readDone" style="flex:1">✓ 我读完了</button>
+    </div>
+    <div class="tiny muted" style="margin-top:8px">${SR?'读不准或识别不了，点「我读完了」照样计入今日进度':'本机浏览器不支持语音评分，用「我读完了」推进'}</div>
+    <div class="tiny" id="micChk" style="margin-top:10px;color:var(--pri);cursor:pointer">🎙 检查麦克风权限</div>
   </div>
   <div class="row" style="gap:10px">
     <button class="btn btn-ghost" id="prevW" style="flex:1">上一个</button>
@@ -1092,8 +1091,8 @@ function bindView(){
       rec.onerror=(e)=>{
         mic.classList.remove('rec');recActive=false;
         if(gotResult)return;
-        const m={'not-allowed':'麦克风被拒绝，请在浏览器设置里允许麦克风后重试',
-          'service-not-allowed':'语音服务不可用，换浏览器或用下面「我读完了」',
+        const m={'not-allowed':'麦克风被浏览器拒绝，点下面「🎙 检查麦克风权限」看具体原因',
+          'service-not-allowed':'浏览器没有语音识别服务，换 Chrome 或用「我读完了」',
           'no-speech':'没听到声音，靠近麦克风再按住读',
           'audio-capture':'找不到麦克风，检查设备后重试'};
         hint.innerHTML='<span class="res-bad">没能识别</span> '+(m[e.error]||('（'+e.error+'）'));
@@ -1122,6 +1121,28 @@ function bindView(){
     };
     const pa=$('#playAgain');
     if(pa)pa.onclick=()=>speak(list[flashIdx][0],S.rate||0.9);
+    const mc=$('#micChk');
+    if(mc)mc.onclick=async()=>{
+      hint.textContent='正在检查麦克风…';
+      try{
+        if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia))throw {name:'no-media'};
+        const st=await navigator.mediaDevices.getUserMedia({audio:true});
+        st.getTracks().forEach(t=>t.stop());
+        const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+        hint.innerHTML='<span class="res-ok">麦克风可用</span> '
+          +(SR?'按住 🎤 直接读就行'
+            :(ios?'但 iPhone 的浏览器不支持网页语音评分，用「我读完了」照样计入进度'
+                :'但这个浏览器没有语音识别能力，建议换 Chrome 打开'));
+      }catch(e){
+        const n=(e&&e.name)||'Error';
+        const m={'NotAllowedError':'浏览器把这个网站设成「禁止麦克风」：点地址栏左侧的图标 → 网站设置 → 麦克风 → 允许，再刷新页面。',
+          'NotFoundError':'没检测到麦克风设备，检查手机是否有麦克风或外接耳机。',
+          'NotReadableError':'麦克风正被别的应用占用，先关掉录音/通话类应用再试。',
+          'SecurityError':'当前页面不在安全环境，需要 https 打开。',
+          'no-media':'这个浏览器不提供麦克风接口，建议换 Chrome。'};
+        hint.innerHTML='<span class="res-bad">麦克风不可用</span> '+(m[n]||('（'+n+'）'));
+      }
+    };
   }
 
   // 默写（单词）
