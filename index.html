@@ -96,7 +96,8 @@ nav button.on i{filter:none;transform:translateY(-1px)}
 .flash .ex{font-size:12.5px;opacity:.8;margin-top:10px;line-height:1.6}
 .mic{width:76px;height:76px;border-radius:50%;border:none;background:var(--card);color:var(--pri);
   font-size:30px;box-shadow:0 8px 24px rgba(20,30,70,.16);cursor:pointer;margin:6px auto 0;display:flex;
-  align-items:center;justify-content:center;transition:.2s}
+  align-items:center;justify-content:center;transition:.2s;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none}
 .mic.rec{background:var(--bad);color:#fff;transform:scale(1.06);animation:pulse 1.2s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(240,68,56,.5)}100%{box-shadow:0 0 0 18px rgba(240,68,56,0)}}
 .hint{text-align:center;font-size:12.5px;color:var(--ink2);margin-top:10px;min-height:20px}
@@ -169,7 +170,7 @@ const el = (html)=>{const d=document.createElement('div');d.innerHTML=html.trim(
 const pad = n=>String(n).padStart(2,'0');
 const iso = d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const KEY = 'cog_growth_v1';
-const BUILD = 'v1.4 · 11/25';
+const BUILD = 'v1.9 · 11/26';
 const today = ()=>iso(new Date());
 function dateAdd(str,n){const d=new Date(str+'T00:00:00');d.setDate(d.getDate()+n);return iso(d);}
 function diffDays(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/864e5);}
@@ -548,33 +549,33 @@ function viewEnglish(){
   const seenN=Object.keys(S.seen||{}).length;
   const dayP=Math.min(100,Math.round(dayNo()/365*100));
   const planCard=`
-  <div class="card" style="padding:14px 16px">
+  <div class="card" style="background:linear-gradient(135deg,rgba(91,108,255,.09),rgba(139,92,246,.09));border:1px solid rgba(91,108,255,.15)">
     <div class="row">
       <div style="flex:1;min-width:0">
         <div class="tiny muted">雅思 6 分 · 一年规划</div>
-        <div style="font-size:13px;font-weight:700;margin-top:4px">6000 核心词 · 每天 20 词 + 10 AI 词 + 10 句</div>
+        <div class="bold" style="font-size:14px;margin-top:6px">${ex.en>0?'加练第 '+ex.en+' 组':'今日'} · ${enGroup==='sent'?'句子 10':(enGroup==='ai'?'AI 单词 10':'日常单词 20')}</div>
       </div>
-      <span class="lv">DAY ${dayNo()}/365</span>
+      <span class="pill pri">DAY ${dayNo()}/365</span>
     </div>
-    <div class="prog" style="margin-top:12px"><i style="width:${dayP}%;background:linear-gradient(90deg,var(--pri),var(--pri2))"></i></div>
+    <div class="prog" style="margin-top:14px"><i style="width:${dayP}%;background:linear-gradient(90deg,var(--pri),var(--pri2))"></i></div>
     <div class="row tiny muted" style="margin-top:8px">
-      <span>已掌握 ${seenN} / 6000</span><div class="spacer"></div><span>词库已装载 ${DAILY_WORDS.length} 词</span>
+      <span>已掌握 ${seenN} / 6000</span><div class="spacer"></div><span>词库 ${DAILY_WORDS.length} 词</span>
+    </div>
+    <div class="row" style="margin-top:14px;gap:8px;justify-content:flex-end">
+      <button class="btn btn-soft btn-sm" id="plusEn">＋ 加练一组</button>
+      ${ex.en>0?`<button class="btn btn-ghost btn-sm" id="backEn">↩ 今日组</button>`:''}
     </div>
   </div>`;
   const groupBar=`
-    <div style="margin-bottom:10px">
+    <div style="margin:0 0 12px">
       <span class="chip ${enGroup==='daily'?'on':''}" data-g="daily">日常单词 20</span>
       <span class="chip ${enGroup==='ai'?'on':''}" data-g="ai">AI 单词 10</span>
       <span class="chip ${enGroup==='sent'?'on':''}" data-g="sent">句子 10</span>
-    </div>
-    <div class="row" style="gap:8px;margin-bottom:12px;justify-content:flex-end">
-      <button class="btn btn-soft btn-sm" id="plusEn">＋ 加练一组</button>
-      ${ex.en>0?`<button class="btn btn-ghost btn-sm" id="backEn">↩ 今日组（已加练 ${ex.en} 组）</button>`:''}
     </div>`;
 
   if(enGroup==='sent'){
     const list=tw.sent;
-    return groupBar + `
+    return planCard + groupBar + `
     <div class="card">
       <div class="row">
         <div style="flex:1;min-width:0">
@@ -610,7 +611,7 @@ function viewEnglish(){
   }
 
   const list = enGroup==='daily'? tw.daily : tw.ai;
-  return groupBar + (enGroup==='daily'?planCard:'') + `
+  return planCard + groupBar + `
   <div class="card">
     <div class="row">
       <div style="flex:1;min-width:0">
@@ -678,7 +679,7 @@ function viewRead(){
   </div>
   <div class="card" style="text-align:center;padding:20px 16px">
     <button class="mic" id="micBtn">🎤</button>
-    <div class="hint" id="hint">点击麦克风，${isS?'把整句读一遍':'读一遍「'+w[0]+'」'}</div>
+    <div class="hint" id="hint">按住 🎤，${isS?'把整句读完':'读一遍'}</div>
     <div class="tiny muted" style="margin-top:6px">${SR?(isS?'整句读对 70% 以上算过':'说完即可看到发音评分'):'当前浏览器不支持语音识别，可用'+(isS?'填空练习':'默写练习')+'代替'}</div>
   </div>
   <div class="row" style="gap:10px">
@@ -1000,14 +1001,37 @@ function bindView(){
     $('#prevW').onclick=()=>{flashIdx=Math.max(0,flashIdx-1);render();};
     $('#nextW').onclick=()=>{flashIdx=Math.min(list.length-1,flashIdx+1);render();};
     const mic=$('#micBtn'), hint=$('#hint');
-    mic.onclick=()=>{
+    const pass=isS?0.7:0.85, near=isS?0.45:0.55;
+    let recActive=false,gotResult=false,micReady=false;
+    async function ensureMic(){
+      if(micReady)return true;
+      try{
+        if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+          const st=await navigator.mediaDevices.getUserMedia({audio:true});
+          st.getTracks().forEach(t=>t.stop());
+        }
+        micReady=true;return true;
+      }catch(e){
+        const n=(e&&e.name)||'Error';
+        const m={'NotAllowedError':'浏览器把本站麦克风设成禁止，点地址栏图标改成「允许」再刷新',
+          'NotFoundError':'没检测到麦克风设备，接个耳机试试',
+          'NotReadableError':'麦克风被别的应用占用，先关掉录音/通话',
+          'SecurityError':'当前页面不是 https，麦克风用不了'};
+        hint.innerHTML='<span class="res-bad">麦克风没开成</span> '+(m[n]||('（'+n+'）'));
+        return false;
+      }
+    }
+    async function startRec(){
       if(!SR){hint.innerHTML='<span class="res-bad">此浏览器不支持语音识别</span>，请用'+(isS?'句子填空':'默写练习');return;}
-      if(rec){try{rec.stop();}catch(e){}} 
+      if(recActive)return;
+      if(!micReady&&!(await ensureMic()))return;
+      recActive=true;gotResult=false;
+      if(rec){try{rec.abort();}catch(e){}}
       rec=new SR();rec.lang='en-US';rec.interimResults=false;rec.maxAlternatives=3;
-      mic.classList.add('rec');hint.textContent=isS?'正在听…请把整句读完':'正在听…请读一遍';
-      const pass=isS?0.7:0.85, near=isS?0.45:0.55;
+      try{rec.continuous=true;}catch(e){}
+      mic.classList.add('rec');hint.textContent='正在听…读完松手';
       rec.onresult=(ev)=>{
-        mic.classList.remove('rec');
+        gotResult=true;
         let best='',bs=0;
         for(let i=0;i<ev.results.length;i++)for(let j=0;j<ev.results[i].length;j++){
           const s=sim(list[flashIdx][0],ev.results[i][j].transcript);if(s>bs){bs=s;best=ev.results[i][j].transcript;}
@@ -1023,10 +1047,30 @@ function bindView(){
           hint.innerHTML=`<span class="res-bad">再试一次</span> 听到 “${best||''}”，可以点慢速发音跟一遍`;
         }
       };
-      rec.onerror=(e)=>{mic.classList.remove('rec');hint.innerHTML='<span class="res-bad">没听清</span>（'+e.error+'），请靠近麦克风再试';};
-      rec.onend=()=>mic.classList.remove('rec');
-      try{rec.start();}catch(e){mic.classList.remove('rec');hint.textContent='无法启动麦克风，请检查权限';}
-    };
+      rec.onerror=(e)=>{
+        mic.classList.remove('rec');recActive=false;
+        if(gotResult)return;
+        const m={'not-allowed':'麦克风被拒绝，点地址栏的图标改成允许再试',
+          'service-not-allowed':'浏览器没有语音识别服务，换个浏览器试试',
+          'no-speech':'没听到声音：按住 🎤 后立刻开口读，别先松手',
+          'audio-capture':'找不到麦克风，检查设备后重试',
+          'network':'语音识别需要联网，检查网络后重试'};
+        hint.innerHTML='<span class="res-bad">没能识别</span> '+(m[e.error]||('（'+e.error+'）'));
+      };
+      rec.onend=()=>{
+        mic.classList.remove('rec');recActive=false;
+        if(!gotResult&&!hint.innerHTML.includes('res-bad'))hint.textContent='没听到声音，按住 🎤 后立刻开口读';
+      };
+      try{rec.start();}catch(e){mic.classList.remove('rec');recActive=false;hint.textContent='无法启动识别，请检查麦克风权限';}
+    }
+    function stopRec(){if(rec&&recActive){try{rec.stop();}catch(e){}}}
+    if(SR){
+      mic.onpointerdown=(e)=>{e.preventDefault();startRec();};
+      ['pointerup','pointercancel','pointerleave'].forEach(t=>mic.addEventListener(t,stopRec));
+      mic.onclick=(e)=>e.preventDefault();
+    }else{
+      mic.onclick=()=>startRec();
+    }
   }
 
   // 默写（单词）
