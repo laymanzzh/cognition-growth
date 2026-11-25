@@ -222,22 +222,43 @@ function pickVoice(){
   voice=saved||VOICES[0]||null;
 }
 if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
-function speak(text,rate){
+/* ---- 朗读：真人录音优先（联网），不可用则回退系统 TTS ---- */
+let curAudio=null;
+function stopSpeak(){
+  try{if(curAudio){curAudio.pause();curAudio.src='';curAudio=null;}}catch(e){}
+  try{speechSynthesis.cancel();}catch(e){}
+}
+function speakSystem(text,rate){
   if(!('speechSynthesis' in window)){toast('当前浏览器不支持发音');return;}
   try{speechSynthesis.cancel();}catch(e){}
   const r=rate||S.rate||0.9;
-  const src=String(text||'').trim();
-  if(!src)return;
-  // 长句按标点分段排队朗读，句子之间自然停顿，比整段一口气读清晰
-  let parts=src.split(/(?<=[.!?;:])\s+/).filter(Boolean);
-  if(parts.length<2)parts=[src];
-  parts.forEach((p,i)=>{
+  let parts=String(text).split(/(?<=[.!?;:])\s+/).filter(Boolean);
+  if(parts.length<2)parts=[text];
+  parts.forEach(p=>{
     const u=new SpeechSynthesisUtterance(p);
     u.lang=/^en-gb/i.test((voice&&voice.lang)||'')?'en-GB':'en-US';
     u.rate=r;u.pitch=1;u.volume=1;
     if(voice)u.voice=voice;
     speechSynthesis.speak(u);
   });
+}
+function speak(text,rate){
+  const src=String(text||'').trim();
+  if(!src)return;
+  stopSpeak();
+  const r=rate||S.rate||0.9;
+  const online=('voiceMode' in S?S.voiceMode:'auto')!=='sys' && navigator.onLine!==false
+    && src.length<=120 && r>=0.8;   // 长句和慢速跟读交给系统语音更稳
+  if(!online){speakSystem(src,rate);return;}
+  let done=false;
+  const fallback=()=>{if(done)return;done=true;clearTimeout(t);speakSystem(src,rate);};
+  const a=new Audio('https://dict.youdao.com/dictvoice?type=2&audio='+encodeURIComponent(src));
+  a.playbackRate=Math.min(1.25,Math.max(0.75,r/0.95));
+  curAudio=a;a.onerror=fallback;
+  const t=setTimeout(()=>{if(a.readyState<2)fallback();},1800);
+  a.onplaying=()=>clearTimeout(t);
+  const p=a.play();
+  if(p&&p.catch)p.catch(fallback);
 }
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec=null;
@@ -747,6 +768,14 @@ function viewMe(){
   <h2 class="sec">发音设置</h2>
   <div class="card">
     <div class="row" style="margin-bottom:10px">
+      <div class="bold sm">朗读引擎</div><div class="spacer"></div>
+      <span class="tiny muted">${navigator.onLine===false?'当前离线':'联网可用真人录音'}</span>
+    </div>
+    <select id="voiceModeSel">
+      <option value="auto" ${(S.voiceMode||'auto')!=='sys'?'selected':''}>真人发音 · 联网（推荐，最自然）</option>
+      <option value="sys" ${(S.voiceMode||'auto')==='sys'?'selected':''}>系统语音 · 纯离线</option>
+    </select>
+    <div class="row" style="margin-bottom:10px;margin-top:16px">
       <div class="bold sm">朗读声音</div><div class="spacer"></div>
       <span class="tiny muted">${VOICES.length?VOICES.length+' 个英文声音':'未检测到英文声音'}</span>
     </div>
@@ -757,6 +786,7 @@ function viewMe(){
       ${[[0.65,'很慢'],[0.85,'慢'],[0.95,'标准'],[1.1,'快']].map(([r,t])=>`<button class="btn ${Math.abs((S.rate||0.9)-r)<0.02?'btn-soft':'btn-ghost'} btn-sm" data-rate="${r}">${t}</button>`).join('')}
       <button class="btn btn-soft btn-sm" id="tryVoice" style="margin-left:auto">试听</button>
     </div>
+    <div class="tiny muted" style="margin-top:10px;line-height:1.65">真人发音取在线词典录音，单词和短句更自然；断网、长句或慢速跟读会自动回退系统语音。「朗读声音」只对系统语音生效。若系统声音仍偏机械，可在手机里下载高质量英语语音包（见下方说明）。</div>
     <div class="tiny muted" style="margin-top:10px;line-height:1.65">声音偏机械时：Windows 打开「设置 → 时间和语言 → 语音」，安装「英语（美国）」的自然语音包；安卓在系统「文字转语音」里下载高质量英文语音。装完回到这里，会多出 Aria / Emma 这类更自然的声音。</div>
   </div>
 
@@ -956,6 +986,9 @@ function bindView(){
 
   // 我的
   if(route==='me'){
+    const vms=$('#voiceModeSel');
+    if(vms)vms.onchange=()=>{S.voiceMode=vms.value;save();render();
+      setTimeout(()=>{speak('Hello. Nice to meet you.');toast(vms.value==='sys'?'已切换系统语音':'已切换真人发音');},150);};
     const sel=$('#voiceSel');
     if(sel)sel.onchange=()=>{S.voiceName=sel.value;save();pickVoice();toast('已切换声音');};
     const tv=$('#tryVoice');
