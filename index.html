@@ -170,7 +170,7 @@ const el = (html)=>{const d=document.createElement('div');d.innerHTML=html.trim(
 const pad = n=>String(n).padStart(2,'0');
 const iso = d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const KEY = 'cog_growth_v1';
-const BUILD = 'v2.0 · 11/26';
+const BUILD = 'v2.1 · 11/26';
 const today = ()=>iso(new Date());
 function dateAdd(str,n){const d=new Date(str+'T00:00:00');d.setDate(d.getDate()+n);return iso(d);}
 function diffDays(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/864e5);}
@@ -756,8 +756,17 @@ const C = {
   fin:{name:'金融',color:'var(--fin)',pool:()=>FIN_LESSONS,intro:'每天一小节金融常识，看懂钱是怎么运转的'}
 };
 function lessonStep(k){const ex=EX();return k==='ai'?ex.ai:k==='fit'?ex.fit:ex.fin;}
-function lessonFor(k){const p=C[k].pool();return p[(dayNo()-1+lessonStep(k))%p.length];}
-function lessonIdx(k){const p=C[k].pool();return (dayNo()-1+lessonStep(k))%p.length;}
+function skipMap(){S.skip=S.skip||{};return S.skip;}
+/* 排课：从「第 dayNo 天」开始，跳过已加练学过的课；加练则向后顺延 step 节 */
+function lessonIdx(k){
+  const p=C[k].pool(), skip=skipMap(), step=lessonStep(k);
+  const base=(dayNo()-1)%p.length;
+  if(step>0)return (base+step)%p.length;
+  let idx=base, g=0;
+  while(skip[k+':'+idx]&&g<p.length){idx=(idx+1)%p.length;g++;}
+  return idx;
+}
+function lessonFor(k){const p=C[k].pool();return p[lessonIdx(k)];}
 function viewCourse(k){
   const L=lessonFor(k), done=courseDone(k), ok=courseOk(k);
   const pool=C[k].pool(), idx=lessonIdx(k), step=lessonStep(k);
@@ -767,7 +776,7 @@ function viewCourse(k){
     <div class="row">
       <div style="flex:1">
         <div class="tiny muted">${C[k].intro}</div>
-        <div class="bold" style="font-size:14px;margin-top:6px">${step>0?'加练第 '+step+' 节':'今日第 '+(idx+1)+' 节'} · ${L.lv}${roundNo(15)>1?' · 第 '+roundNo(15)+' 轮':''}</div>
+        <div class="bold" style="font-size:14px;margin-top:6px">${step>0?'加练第 '+step+' 节':'今日第 '+(idx+1)+' 节'} · ${L.lv}${roundNo(pool.length)>1?' · 第 '+roundNo(pool.length)+' 轮':''}</div>
       </div>
       ${done?'<span class="pill" style="background:rgba(18,183,106,.14);color:var(--ok)">已完成</span>':'<span class="pill pri">待学习</span>'}
     </div>
@@ -775,7 +784,7 @@ function viewCourse(k){
       <button class="btn btn-soft btn-sm" id="plusCourse">＋ 加练一节</button>
       ${step>0?`<button class="btn btn-ghost btn-sm" id="backCourse">↩ 回到今日课</button>`:''}
     </div>
-    ${step>0?'<div class="tiny muted" style="margin-top:8px">加练内容是提前学，之后按日程还会再遇到，相当于复习一遍。</div>':''}
+    ${step>0?'<div class="tiny muted" style="margin-top:8px">加练过的课不会再排进后面的日程，学完直接顺延到下一节。</div>':''}
   </div>
 
   <div class="card">
@@ -863,7 +872,7 @@ function viewMe(){
 
   <h2 class="sec">模块进度</h2>
   <div class="card">
-    ${[['英语单词',seen,300,'var(--en)'],['英语句子',sentN,100,'var(--en)'],['AI 课程',aiDone,15,'var(--ai)'],['健身课程',fitDone,15,'var(--fit)'],['金融课程',finDone,15,'var(--fin)']].map(([n,v,m,c])=>`
+    ${[['英语单词',seen,300,'var(--en)'],['英语句子',sentN,100,'var(--en)'],['AI 课程',aiDone,AI_LESSONS.length,'var(--ai)'],['健身课程',fitDone,FIT_LESSONS.length,'var(--fit)'],['金融课程',finDone,FIN_LESSONS.length,'var(--fin)']].map(([n,v,m,c])=>`
       <div style="margin-bottom:14px">
         <div class="row tiny" style="margin-bottom:6px"><span style="font-weight:600">${n}</span><div class="spacer"></div><span class="muted">${v}/${m}</span></div>
         <div class="prog"><i style="width:${Math.min(100,Math.round(v/m*100))}%;background:${c}"></i></div>
@@ -948,7 +957,7 @@ function bindView(){
   const plusCourse=$('#plusCourse');
   if(plusCourse){
     const k=route==='ai'?'ai':route==='fitness'?'fit':'fin';
-    plusCourse.onclick=()=>{const ex=EX();ex[k]+=1;save();render();toast('进入加练：第 '+ex[k]+' 节');};
+    plusCourse.onclick=()=>{const ex=EX();ex[k]+=1;const i=lessonIdx(k);skipMap()[k+':'+i]=1;save();render();toast('进入加练：第 '+ex[k]+' 节');};
     const b=$('#backCourse');if(b)b.onclick=()=>{EX()[k]=0;save();render();toast('已回到今日课');};
   }
 
